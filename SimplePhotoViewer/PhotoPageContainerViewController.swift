@@ -25,7 +25,7 @@ class PhotoPageContainerViewController: UIViewController {
         self.pageViewController.dataSource = self
         
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "\(PhotoZoomViewController.self)") as! PhotoZoomViewController
-        vc.image = self.photos[0]
+        vc.image = self.photos[self.currentIndex]
         let viewControllers = [
             vc
         ]
@@ -82,4 +82,20 @@ extension PhotoPageContainerViewController: UIPageViewControllerDelegate, UIPage
         self.nextIndex = nil
     }
     
+}
+
+extension PhotoPageContainerViewController: ZoomAnimatorDelegate {
+    
+    func transitionWillStartWith(zoomAnimator: ZoomAnimator) {
+        
+    }
+    
+    func transitionDidEndWith(zoomAnimator: ZoomAnimator) {
+        
+    }
+    
+    func referenceImageView() -> UIImageView {
+        let imageView = (self.pageViewController.viewControllers![0] as! PhotoZoomViewController).imageView!
+        return imageView
+    }
 }

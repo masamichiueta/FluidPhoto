@@ -30,7 +30,11 @@ class ViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowPhotoPageView" {
-            let vc = (segue.destination as! UINavigationController).viewControllers[0] as! PhotoPageContainerViewController
+            let nav = segue.destination as! UINavigationController
+            nav.transitioningDelegate = self
+            let vc = nav.viewControllers[0] as! PhotoPageContainerViewController
+            let selectedIndexPath = self.collectionView.indexPathsForSelectedItems!.first!
+            vc.currentIndex = selectedIndexPath.row
             vc.photos = self.photos
         }
     }
@@ -59,3 +63,29 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     }
 }
 
+extension ViewController: UIViewControllerTransitioningDelegate {
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        
+        let nav = presented as! UINavigationController
+        let containerView = nav.viewControllers[0] as! PhotoPageContainerViewController
+        return ZoomAnimator(duration: 0.3, presenting: true, fromDelegate: self, toDelegate: containerView)
+    }
+    
+}
+
+extension ViewController: ZoomAnimatorDelegate {
+    func transitionWillStartWith(zoomAnimator: ZoomAnimator) {
+        
+    }
+    
+    func transitionDidEndWith(zoomAnimator: ZoomAnimator) {
+        
+    }
+    
+    func referenceImageView() -> UIImageView {
+        let selectedIndexPath = self.collectionView.indexPathsForSelectedItems!.first!
+        let cell = self.collectionView.cellForItem(at: selectedIndexPath) as! PhotoCollectionViewCell
+        return cell.imageView
+    }
+}
