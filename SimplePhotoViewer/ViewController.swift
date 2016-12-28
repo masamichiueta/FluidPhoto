@@ -67,25 +67,46 @@ extension ViewController: UIViewControllerTransitioningDelegate {
     
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         
+        let zoomAnimator = PhotoZoomAnimator(duration: 0.5, presenting: true)
         let nav = presented as! UINavigationController
         let containerView = nav.viewControllers[0] as! PhotoPageContainerViewController
-        return ZoomAnimator(duration: 0.3, presenting: true, fromDelegate: self, toDelegate: containerView)
+        zoomAnimator.fromDelegate = self
+        zoomAnimator.toDelegate = containerView
+        return zoomAnimator
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        
+        let zoomAnimator = PhotoZoomAnimator(duration: 0.5, presenting: false)
+        let nav = dismissed as! UINavigationController
+        let containerView = nav.viewControllers[0] as! PhotoPageContainerViewController
+        zoomAnimator.fromDelegate = containerView
+        zoomAnimator.toDelegate = self
+        return zoomAnimator
     }
     
 }
 
-extension ViewController: ZoomAnimatorDelegate {
-    func transitionWillStartWith(zoomAnimator: ZoomAnimator) {
+extension ViewController: PhotoZoomAnimatorDelegate {
+    func transitionWillStartWith(zoomAnimator: PhotoZoomAnimator) {
         
     }
     
-    func transitionDidEndWith(zoomAnimator: ZoomAnimator) {
+    func transitionDidEndWith(zoomAnimator: PhotoZoomAnimator) {
         
     }
     
-    func referenceImageView() -> UIImageView {
+    func referenceImageView(for zoomAnimator: PhotoZoomAnimator) -> UIImageView? {
         let selectedIndexPath = self.collectionView.indexPathsForSelectedItems!.first!
         let cell = self.collectionView.cellForItem(at: selectedIndexPath) as! PhotoCollectionViewCell
+        
         return cell.imageView
+    }
+    
+    func referenceImageViewFrameInTransitioningView(for zoomAnimator: PhotoZoomAnimator) -> CGRect? {
+        let selectedIndexPath = self.collectionView.indexPathsForSelectedItems!.first!
+        let cell = self.collectionView.cellForItem(at: selectedIndexPath) as! PhotoCollectionViewCell
+        
+        return self.collectionView.convert(cell.frame, to: self.view)
     }
 }

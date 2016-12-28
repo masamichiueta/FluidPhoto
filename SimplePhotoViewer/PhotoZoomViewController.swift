@@ -18,7 +18,7 @@ class PhotoZoomViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     
     var image: UIImage!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.scrollView.delegate = self
@@ -27,11 +27,13 @@ class PhotoZoomViewController: UIViewController {
                                       y: self.imageView.frame.origin.y,
                                       width: self.image.size.width,
                                       height: self.image.size.height)
+        
+        
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        updateMinZoomScaleForSize(view.bounds.size)
+        updateZoomScaleForSize(view.bounds.size)
     }
     
     override func didReceiveMemoryWarning() {
@@ -39,12 +41,13 @@ class PhotoZoomViewController: UIViewController {
     }
     
 
-    fileprivate func updateMinZoomScaleForSize(_ size: CGSize) {
+    fileprivate func updateZoomScaleForSize(_ size: CGSize) {
         let widthScale = size.width / imageView.bounds.width
         let heightScale = size.height / imageView.bounds.height
         let minScale = min(widthScale, heightScale)
         scrollView.minimumZoomScale = minScale
         scrollView.zoomScale = minScale
+        scrollView.maximumZoomScale = minScale * 4
     }
     
     fileprivate func updateConstraintsForSize(_ size: CGSize) {

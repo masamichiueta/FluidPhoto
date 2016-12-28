@@ -17,7 +17,11 @@ class PhotoPageContainerViewController: UIViewController {
     var photos: [UIImage]!
     var currentIndex = 0
     var nextIndex: Int?
-
+    
+    var panGestureRecognizer: UIPanGestureRecognizer!
+    var singleTapGestureRecognizer: UITapGestureRecognizer!
+    var fullScreen: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,11 +35,46 @@ class PhotoPageContainerViewController: UIViewController {
         ]
         
         self.pageViewController.setViewControllers(viewControllers, direction: .forward, animated: true, completion: nil)
+        
+        self.panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPanWith(gestureRecognizer:)))
+        self.pageViewController.view.addGestureRecognizer(self.panGestureRecognizer)
+        
+        self.singleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didSingleTapWith(gestureRecognizer:)))
+        self.pageViewController.view.addGestureRecognizer(self.singleTapGestureRecognizer)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func didPanWith(gestureRecognizer: UIPanGestureRecognizer) {
+        if gestureRecognizer.state == .began {
+            print("Began")
+        } else {
+            print("Else")
+        }
+    }
+    
+    func didSingleTapWith(gestureRecognizer: UITapGestureRecognizer) {
+        if self.fullScreen {
+            UIView.animate(withDuration: 0.25,
+                           animations: {
+                            self.view.backgroundColor = .white
+                            self.navigationController?.setNavigationBarHidden(false, animated: true)
+            }, completion: { completed in
+                self.fullScreen = false
+            })
+        } else {
+            UIView.animate(withDuration: 0.25,
+                           animations: {
+                            self.view.backgroundColor = .black
+                            self.navigationController?.setNavigationBarHidden(true, animated: true)
+            }, completion: { completed in
+                self.fullScreen = true
+            })
+        }
+
     }
 }
 
@@ -84,18 +123,24 @@ extension PhotoPageContainerViewController: UIPageViewControllerDelegate, UIPage
     
 }
 
-extension PhotoPageContainerViewController: ZoomAnimatorDelegate {
+extension PhotoPageContainerViewController: PhotoZoomAnimatorDelegate {
     
-    func transitionWillStartWith(zoomAnimator: ZoomAnimator) {
+    func transitionWillStartWith(zoomAnimator: PhotoZoomAnimator) {
         
     }
     
-    func transitionDidEndWith(zoomAnimator: ZoomAnimator) {
+    func transitionDidEndWith(zoomAnimator: PhotoZoomAnimator) {
         
     }
     
-    func referenceImageView() -> UIImageView {
-        let imageView = (self.pageViewController.viewControllers![0] as! PhotoZoomViewController).imageView!
-        return imageView
+    func referenceImageView(for zoomAnimator: PhotoZoomAnimator) -> UIImageView? {
+        
+        let currentViewController = self.pageViewController.viewControllers![0] as! PhotoZoomViewController
+        return currentViewController.imageView
+    }
+    
+    func referenceImageViewFrameInTransitioningView(for zoomAnimator: PhotoZoomAnimator) -> CGRect? {
+        let currentViewController = self.pageViewController.viewControllers![0] as! PhotoZoomViewController
+        return currentViewController.scrollView.convert(currentViewController.imageView.frame, to: currentViewController.view)
     }
 }

@@ -145,6 +145,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="2858" height="1905"/>
                                     </imageView>
                                 </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="tEa-4R-M8a" firstAttribute="top" secondItem="jUt-VB-wrq" secondAttribute="top" id="6u2-fR-jf0"/>
                                     <constraint firstAttribute="bottom" secondItem="tEa-4R-M8a" secondAttribute="bottom" id="Ead-n7-lLO"/>
@@ -153,7 +154,7 @@
                                 </constraints>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="jUt-VB-wrq" firstAttribute="leading" secondItem="O9F-2H-ztS" secondAttribute="leading" id="17d-mJ-0XO"/>
                             <constraint firstAttribute="trailing" secondItem="jUt-VB-wrq" secondAttribute="trailing" id="ata-mt-oIF"/>
