@@ -8,7 +8,13 @@
 
 import UIKit
 
+protocol PhotoPageContainerViewControllerDelegate: class {
+    func containerViewController(_ containerViewController: PhotoPageContainerViewController, indexDidUpdate currentIndex: Int)
+}
+
 class PhotoPageContainerViewController: UIViewController {
+    
+    weak var delegate: PhotoPageContainerViewControllerDelegate?
     
     var pageViewController: UIPageViewController {
         return self.childViewControllers[0] as! UIPageViewController
@@ -116,6 +122,7 @@ extension PhotoPageContainerViewController: UIPageViewControllerDelegate, UIPage
         
         if (completed && self.nextIndex != nil) {
             self.currentIndex = self.nextIndex!
+            self.delegate?.containerViewController(self, indexDidUpdate: self.currentIndex)
         }
         
         self.nextIndex = nil

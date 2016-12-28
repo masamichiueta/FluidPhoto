@@ -33,6 +33,7 @@ class ViewController: UIViewController {
             let nav = segue.destination as! UINavigationController
             nav.transitioningDelegate = self
             let vc = nav.viewControllers[0] as! PhotoPageContainerViewController
+            vc.delegate = self
             let selectedIndexPath = self.collectionView.indexPathsForSelectedItems!.first!
             vc.currentIndex = selectedIndexPath.row
             vc.photos = self.photos
@@ -85,6 +86,13 @@ extension ViewController: UIViewControllerTransitioningDelegate {
         return zoomAnimator
     }
     
+}
+
+extension ViewController: PhotoPageContainerViewControllerDelegate {
+    func containerViewController(_ containerViewController: PhotoPageContainerViewController, indexDidUpdate currentIndex: Int) {
+        let indexPath = IndexPath(row: currentIndex, section: 0)
+        self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredVertically)
+    }
 }
 
 extension ViewController: PhotoZoomAnimatorDelegate {
