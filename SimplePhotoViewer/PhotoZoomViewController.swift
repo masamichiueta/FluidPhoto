@@ -19,6 +19,14 @@ class PhotoZoomViewController: UIViewController {
     
     var image: UIImage!
     
+    var doubleTapGestureRecognizer: UITapGestureRecognizer!
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didDoubleTapWith(gestureRecognizer:)))
+        self.doubleTapGestureRecognizer.numberOfTapsRequired = 2
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.scrollView.delegate = self
@@ -27,8 +35,7 @@ class PhotoZoomViewController: UIViewController {
                                       y: self.imageView.frame.origin.y,
                                       width: self.image.size.width,
                                       height: self.image.size.height)
-        
-        
+        self.view.addGestureRecognizer(self.doubleTapGestureRecognizer)
     }
     
     override func viewDidLayoutSubviews() {
@@ -38,6 +45,23 @@ class PhotoZoomViewController: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func didDoubleTapWith(gestureRecognizer: UITapGestureRecognizer) {
+        let pointInView = gestureRecognizer.location(in: self.imageView)
+        var newZoomScale = self.scrollView.maximumZoomScale
+        
+        if self.scrollView.zoomScale >= newZoomScale || abs(self.scrollView.zoomScale - newZoomScale) <= 0.01 {
+            newZoomScale = self.scrollView.minimumZoomScale
+        }
+        
+        let width = self.scrollView.bounds.width / newZoomScale
+        let height = self.scrollView.bounds.height / newZoomScale
+        let originX = pointInView.x - (width / 2.0)
+        let originY = pointInView.y - (height / 2.0)
+        
+        let rectToZoomTo = CGRect(x: originX, y: originY, width: width, height: height)
+        self.scrollView.zoom(to: rectToZoomTo, animated: true)        
     }
     
 

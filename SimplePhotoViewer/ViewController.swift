@@ -31,8 +31,8 @@ class ViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowPhotoPageView" {
             let nav = segue.destination as! UINavigationController
-            nav.transitioningDelegate = self
             let vc = nav.viewControllers[0] as! PhotoPageContainerViewController
+            nav.transitioningDelegate = vc
             vc.delegate = self
             let selectedIndexPath = self.collectionView.indexPathsForSelectedItems!.first!
             vc.currentIndex = selectedIndexPath.row
@@ -64,29 +64,6 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     }
 }
 
-extension ViewController: UIViewControllerTransitioningDelegate {
-    
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        
-        let zoomAnimator = PhotoZoomAnimator(duration: 0.5, presenting: true)
-        let nav = presented as! UINavigationController
-        let containerView = nav.viewControllers[0] as! PhotoPageContainerViewController
-        zoomAnimator.fromDelegate = self
-        zoomAnimator.toDelegate = containerView
-        return zoomAnimator
-    }
-    
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        
-        let zoomAnimator = PhotoZoomAnimator(duration: 0.5, presenting: false)
-        let nav = dismissed as! UINavigationController
-        let containerView = nav.viewControllers[0] as! PhotoPageContainerViewController
-        zoomAnimator.fromDelegate = containerView
-        zoomAnimator.toDelegate = self
-        return zoomAnimator
-    }
-    
-}
 
 extension ViewController: PhotoPageContainerViewControllerDelegate {
     func containerViewController(_ containerViewController: PhotoPageContainerViewController, indexDidUpdate currentIndex: Int) {
