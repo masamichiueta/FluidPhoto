@@ -64,7 +64,6 @@ class PhotoZoomViewController: UIViewController {
         self.scrollView.zoom(to: rectToZoomTo, animated: true)        
     }
     
-
     fileprivate func updateZoomScaleForSize(_ size: CGSize) {
         let widthScale = size.width / imageView.bounds.width
         let heightScale = size.height / imageView.bounds.height

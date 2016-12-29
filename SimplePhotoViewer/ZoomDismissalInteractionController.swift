@@ -14,6 +14,7 @@ class ZoomDismissalInteractionController: NSObject {
     var animator: UIViewControllerAnimatedTransitioning?
     
     var fromReferenceImageViewFrame: CGRect?
+    var fromViewBackgroundColor: UIColor?
     
     func didPanWith(gestureRecognizer: UIPanGestureRecognizer) {
         
@@ -30,7 +31,7 @@ class ZoomDismissalInteractionController: NSObject {
                 return
         }
         
-        let anchorPoint = fromVC.view.center
+        let anchorPoint = CGPoint(x: fromReferenceImageViewFrame.midX, y: fromReferenceImageViewFrame.midY)
         let translatedPoint = gestureRecognizer.translation(in: fromVC.view)
         
         let newCenter = CGPoint(x: anchorPoint.x + translatedPoint.x, y: anchorPoint.y + translatedPoint.y)
@@ -39,9 +40,9 @@ class ZoomDismissalInteractionController: NSObject {
         let verticalDelta = newCenter.y - anchorPoint.y < 0 ? 0 : newCenter.y - anchorPoint.y
         
         if fromVC is UINavigationController {
-            fromVC.childViewControllers[0].view.backgroundColor = UIColor(white: 1.0, alpha: backgroundAlphaFor(view: fromVC.view, withPanningVerticalDelta: verticalDelta))
+            fromVC.childViewControllers[0].view.backgroundColor = self.fromViewBackgroundColor?.withAlphaComponent(backgroundAlphaFor(view: fromVC.view, withPanningVerticalDelta: verticalDelta))
         } else {
-            fromVC.view.backgroundColor = UIColor(white: 1.0, alpha: backgroundAlphaFor(view: fromVC.view, withPanningVerticalDelta: verticalDelta))
+            fromVC.view.backgroundColor = self.fromViewBackgroundColor?.withAlphaComponent(backgroundAlphaFor(view: fromVC.view, withPanningVerticalDelta: verticalDelta))
         }
         
         toReferenceImageView.isHidden = true
@@ -58,9 +59,9 @@ class ZoomDismissalInteractionController: NSObject {
                     animations: {
                         fromReferenceImageView.frame = fromReferenceImageViewFrame
                         if fromVC is UINavigationController {
-                            fromVC.childViewControllers[0].view.backgroundColor = UIColor(white: 1.0, alpha: 1.0)
+                            fromVC.childViewControllers[0].view.backgroundColor = self.fromViewBackgroundColor
                         } else {
-                            fromVC.view.backgroundColor = UIColor(white: 1.0, alpha: 1.0)
+                            fromVC.view.backgroundColor = self.fromViewBackgroundColor
                         }
                 },
                     completion: { completed in
@@ -94,10 +95,19 @@ extension ZoomDismissalInteractionController: UIViewControllerInteractiveTransit
         self.transitionContext = transitionContext
         
         guard let animator = self.animator as? PhotoZoomAnimator,
-            let fromReferenceImageViewFrame = animator.fromDelegate?.referenceImageViewFrameInTransitioningView(for: animator) else {
+            let fromReferenceImageViewFrame = animator.fromDelegate?.referenceImageViewFrameInTransitioningView(for: animator),
+            let fromVC = transitionContext.viewController(forKey: .from) else {
                 return
         }
         
         self.fromReferenceImageViewFrame = fromReferenceImageViewFrame
+        
+        if fromVC is UINavigationController {
+            self.fromViewBackgroundColor = UIColor(cgColor: fromVC.childViewControllers[0].view.backgroundColor!.cgColor)
+        } else {
+            self.fromViewBackgroundColor = UIColor(cgColor: fromVC.view.backgroundColor!.cgColor)
+        }
+        
+        
     }
 }
