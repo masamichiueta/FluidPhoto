@@ -27,6 +27,8 @@ class PhotoPageContainerViewController: UIViewController {
     var panGestureRecognizer: UIPanGestureRecognizer!
     var singleTapGestureRecognizer: UITapGestureRecognizer!
     var fullScreen: Bool = false
+    
+    var transitionController = ZoomTransitionController()
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,12 +55,25 @@ class PhotoPageContainerViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+        
     func didPanWith(gestureRecognizer: UIPanGestureRecognizer) {
-        if gestureRecognizer.state == .began {
-            print("Began")
-        } else {
-            print("Else")
+        switch gestureRecognizer.state {
+        case .began:
+            let velocity = gestureRecognizer.velocity(in: self.view)
+            if velocity.y < 0 {
+                return
+            }
+            self.transitionController.isInteractive = true
+            self.dismiss(animated: true, completion: nil)
+        case .ended:
+            if self.transitionController.isInteractive {
+                self.transitionController.isInteractive = false
+                self.transitionController.didPanWith(gestureRecognizer: gestureRecognizer)
+            }
+        default:
+            if self.transitionController.isInteractive {
+                self.transitionController.didPanWith(gestureRecognizer: gestureRecognizer)
+            }
         }
     }
     
@@ -130,34 +145,6 @@ extension PhotoPageContainerViewController: UIPageViewControllerDelegate, UIPage
         self.nextIndex = nil
     }
     
-}
-
-extension PhotoPageContainerViewController: UIViewControllerTransitioningDelegate {
-    
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        
-        let zoomAnimator = PhotoZoomAnimator(duration: 0.5, presenting: true)
-        let nav = presenting as! UINavigationController
-        let presentingViewController = nav.viewControllers[0] as! ViewController
-        zoomAnimator.fromDelegate = presentingViewController
-        zoomAnimator.toDelegate = self
-        return zoomAnimator
-    }
-    
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        
-        let zoomAnimator = PhotoZoomAnimator(duration: 0.5, presenting: false)
-        let nav = self.presentingViewController as! UINavigationController
-        let presentingViewController = nav.viewControllers[0] as! ViewController
-        zoomAnimator.fromDelegate = self
-        zoomAnimator.toDelegate = presentingViewController
-        return zoomAnimator
-    }
-    
-//    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-//        
-//        return ZoomDismissalInteractionController()
-//    }
 }
 
 extension PhotoPageContainerViewController: PhotoZoomAnimatorDelegate {

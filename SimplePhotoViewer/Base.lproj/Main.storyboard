@@ -51,7 +51,7 @@
                                         </constraints>
                                         <connections>
                                             <outlet property="imageView" destination="EKY-87-WYU" id="Wpt-4g-Tsu"/>
-                                            <segue destination="2xc-xZ-dEQ" kind="presentation" identifier="ShowPhotoPageView" id="nKi-qH-ZO1"/>
+                                            <segue destination="2xc-xZ-dEQ" kind="presentation" identifier="ShowPhotoPageView" modalPresentationStyle="overCurrentContext" id="nKi-qH-ZO1"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -86,7 +86,7 @@
                         <viewControllerLayoutGuide type="top" id="SPd-xV-Jxj"/>
                         <viewControllerLayoutGuide type="bottom" id="9ae-1m-yvx"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="a2u-Rd-dOr">
+                    <view key="view" opaque="NO" contentMode="scaleToFill" id="a2u-Rd-dOr">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>

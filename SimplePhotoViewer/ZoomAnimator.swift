@@ -15,33 +15,20 @@ protocol PhotoZoomAnimatorDelegate: class {
     func referenceImageViewFrameInTransitioningView(for zoomAnimator: PhotoZoomAnimator) -> CGRect?
 }
 
-class PhotoZoomAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+class PhotoZoomAnimator: NSObject {
     
     var duration: TimeInterval
-    var presenting: Bool
+    var presenting: Bool = true
+    var modalPresentationStyle: UIModalPresentationStyle?
     
     weak var fromDelegate: PhotoZoomAnimatorDelegate?
     weak var toDelegate: PhotoZoomAnimatorDelegate?
     
-    init(duration: TimeInterval, presenting: Bool) {
+    init(duration: TimeInterval) {
         self.duration = duration
-        self.presenting = presenting
     }
     
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return self.duration
-    }
-    
-    
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        if self.presenting {
-            animateZoomInTransition(using: transitionContext)
-        } else {
-            animateZoomOutTransition(using: transitionContext)
-        }
-    }
-    
-    private func animateZoomInTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    fileprivate func animateZoomInTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView
         
         guard let toVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to),
@@ -91,7 +78,7 @@ class PhotoZoomAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         })
     }
     
-    private func animateZoomOutTransition(using transitionContext: UIViewControllerContextTransitioning) {
+    fileprivate func animateZoomOutTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView
         
         guard let toVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to),
@@ -107,8 +94,14 @@ class PhotoZoomAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         self.fromDelegate?.transitionWillStartWith(zoomAnimator: self)
         self.toDelegate?.transitionWillStartWith(zoomAnimator: self)
         
-        containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
-        
+        if let modalPresentationStyle = self.modalPresentationStyle {
+            if modalPresentationStyle != .overCurrentContext {
+                containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
+            }
+        } else {
+            containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
+        }
+
         toReferenceImageView.isHidden = true
         
         let referenceImage = fromReferenceImageView.image!
@@ -158,6 +151,20 @@ class PhotoZoomAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             let width = view.frame.height * imageRatio
             let xPoint = view.frame.minX + (view.frame.width - width) / 2
             return CGRect(x: xPoint, y: 0, width: width, height: view.frame.height)
+        }
+    }
+}
+
+extension PhotoZoomAnimator: UIViewControllerAnimatedTransitioning {
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return self.duration
+    }
+    
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        if self.presenting {
+            animateZoomInTransition(using: transitionContext)
+        } else {
+            animateZoomOutTransition(using: transitionContext)
         }
     }
 }

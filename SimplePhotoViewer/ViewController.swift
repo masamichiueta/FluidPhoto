@@ -32,7 +32,9 @@ class ViewController: UIViewController {
         if segue.identifier == "ShowPhotoPageView" {
             let nav = segue.destination as! UINavigationController
             let vc = nav.viewControllers[0] as! PhotoPageContainerViewController
-            nav.transitioningDelegate = vc
+            nav.transitioningDelegate = vc.transitionController
+            vc.transitionController.fromDelegate = self
+            vc.transitionController.toDelegate = vc
             vc.delegate = self
             let selectedIndexPath = self.collectionView.indexPathsForSelectedItems!.first!
             vc.currentIndex = selectedIndexPath.row

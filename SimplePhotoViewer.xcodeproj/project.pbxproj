@@ -17,6 +17,7 @@
 		2473789C1E0D6591000F7F2A /* PhotoPageContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2473789B1E0D6591000F7F2A /* PhotoPageContainerViewController.swift */; };
 		2473789E1E0D6DB5000F7F2A /* ZoomAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2473789D1E0D6DB5000F7F2A /* ZoomAnimator.swift */; };
 		24C6D4721E14196A00F01715 /* ZoomDismissalInteractionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C6D4711E14196A00F01715 /* ZoomDismissalInteractionController.swift */; };
+		24C6D4751E14FC6F00F01715 /* ZoomTransitionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C6D4741E14FC6F00F01715 /* ZoomTransitionController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		2473789B1E0D6591000F7F2A /* PhotoPageContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPageContainerViewController.swift; sourceTree = "<group>"; };
 		2473789D1E0D6DB5000F7F2A /* ZoomAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomAnimator.swift; sourceTree = "<group>"; };
 		24C6D4711E14196A00F01715 /* ZoomDismissalInteractionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomDismissalInteractionController.swift; sourceTree = "<group>"; };
+		24C6D4741E14FC6F00F01715 /* ZoomTransitionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransitionController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +77,7 @@
 				2473789B1E0D6591000F7F2A /* PhotoPageContainerViewController.swift */,
 				2473789D1E0D6DB5000F7F2A /* ZoomAnimator.swift */,
 				24C6D4711E14196A00F01715 /* ZoomDismissalInteractionController.swift */,
+				24C6D4741E14FC6F00F01715 /* ZoomTransitionController.swift */,
 			);
 			path = SimplePhotoViewer;
 			sourceTree = "<group>";
@@ -157,6 +160,7 @@
 				247378861E0D6302000F7F2A /* AppDelegate.swift in Sources */,
 				2473789A1E0D656D000F7F2A /* PhotoZoomViewController.swift in Sources */,
 				247378981E0D6369000F7F2A /* PhotoCollectionViewCell.swift in Sources */,
+				24C6D4751E14FC6F00F01715 /* ZoomTransitionController.swift in Sources */,
 				24C6D4721E14196A00F01715 /* ZoomDismissalInteractionController.swift in Sources */,
 				2473789E1E0D6DB5000F7F2A /* ZoomAnimator.swift in Sources */,
 			);
