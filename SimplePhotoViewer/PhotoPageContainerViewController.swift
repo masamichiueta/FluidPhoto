@@ -192,11 +192,7 @@ extension PhotoPageContainerViewController: PhotoZoomAnimatorDelegate {
         return self.currentViewController.imageView
     }
     
-    func referenceImageViewFrameInTransitioningView(for zoomAnimator: PhotoZoomAnimator) -> CGRect? {
-        if self.transitionController.isInteractive {
-            return self.currentViewController.imageView.frame
-        }
-        
+    func referenceImageViewFrameInTransitioningView(for zoomAnimator: PhotoZoomAnimator) -> CGRect? {        
         return self.currentViewController.scrollView.convert(self.currentViewController.imageView.frame, to: self.currentViewController.view)
     }
 }

@@ -90,11 +90,10 @@ class PhotoZoomViewController: UIViewController {
 
 extension PhotoZoomViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        // 1
         return imageView
     }
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        updateConstraintsForSize(view.bounds.size)  // 4
+        updateConstraintsForSize(self.navigationController!.view.bounds.size)
     }
 }

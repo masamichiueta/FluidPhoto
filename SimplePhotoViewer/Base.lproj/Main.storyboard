@@ -121,7 +121,7 @@
         <!--Page View Controller-->
         <scene sceneID="WNg-Ff-hE3">
             <objects>
-                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" pageSpacing="10" navigationOrientation="horizontal" spineLocation="none" id="L3c-32-H0D" sceneMemberID="viewController"/>
+                <pageViewController automaticallyAdjustsScrollViewInsets="NO" transitionStyle="scroll" pageSpacing="10" navigationOrientation="horizontal" spineLocation="none" id="L3c-32-H0D" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b1W-23-097" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3526" y="778"/>
@@ -129,7 +129,7 @@
         <!--Photo Zoom View Controller-->
         <scene sceneID="ph8-tL-GV2">
             <objects>
-                <viewController storyboardIdentifier="PhotoZoomViewController" id="yum-7x-ErO" customClass="PhotoZoomViewController" customModule="SimplePhotoViewer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PhotoZoomViewController" automaticallyAdjustsScrollViewInsets="NO" id="yum-7x-ErO" customClass="PhotoZoomViewController" customModule="SimplePhotoViewer" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="JaL-qF-Ng7"/>
                         <viewControllerLayoutGuide type="bottom" id="2Fo-1Z-Vky"/>
@@ -142,7 +142,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="1" translatesAutoresizingMaskIntoConstraints="NO" id="tEa-4R-M8a">
-                                        <rect key="frame" x="0.0" y="0.0" width="2858" height="1905"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="206"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -213,6 +213,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="1" width="2858" height="1905"/>
+        <image name="1" width="320" height="206"/>
     </resources>
 </document>

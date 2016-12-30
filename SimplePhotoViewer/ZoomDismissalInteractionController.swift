@@ -31,19 +31,33 @@ class ZoomDismissalInteractionController: NSObject {
                 return
         }
         
-        let anchorPoint = CGPoint(x: fromReferenceImageViewFrame.midX, y: fromReferenceImageViewFrame.midY)
-        let translatedPoint = gestureRecognizer.translation(in: fromVC.view)
-        
-        let newCenter = CGPoint(x: anchorPoint.x + translatedPoint.x, y: anchorPoint.y + translatedPoint.y)
-        fromReferenceImageView.center = newCenter
-        
-        let verticalDelta = newCenter.y - anchorPoint.y < 0 ? 0 : newCenter.y - anchorPoint.y
-        
+        let contentFromVC: UIViewController
         if fromVC is UINavigationController {
-            fromVC.childViewControllers[0].view.backgroundColor = self.fromViewBackgroundColor?.withAlphaComponent(backgroundAlphaFor(view: fromVC.view, withPanningVerticalDelta: verticalDelta))
+            contentFromVC = fromVC.childViewControllers[0]
+            let nav = fromVC as! UINavigationController
+            nav.navigationBar.backgroundColor = .white
         } else {
-            fromVC.view.backgroundColor = self.fromViewBackgroundColor?.withAlphaComponent(backgroundAlphaFor(view: fromVC.view, withPanningVerticalDelta: verticalDelta))
+            contentFromVC = fromVC
         }
+        
+        fromReferenceImageView.isHidden = true
+        
+        let anchorPoint = CGPoint(x: fromReferenceImageViewFrame.midX, y: fromReferenceImageViewFrame.midY)
+        let translatedPoint = gestureRecognizer.translation(in: fromReferenceImageView)
+        
+        let verticalDelta = translatedPoint.y < 0 ? 0 : translatedPoint.y
+        let backgroundAlpha = backgroundAlphaFor(view: fromVC.view, withPanningVerticalDelta: verticalDelta)
+        let scale = scaleFor(view: fromVC.view, withPanningVerticalDelta: verticalDelta)
+        
+        contentFromVC.view.backgroundColor = .clear
+        fromVC.view.alpha = backgroundAlpha
+        animator.dimmingView?.alpha = backgroundAlpha
+        
+        animator.transitionImageView?.transform = CGAffineTransform(scaleX: scale, y: scale)
+        let newCenter = CGPoint(x: anchorPoint.x + translatedPoint.x, y: anchorPoint.y + translatedPoint.y)
+        
+        animator.transitionImageView?.center = newCenter
+
         
         toReferenceImageView.isHidden = true
         
@@ -57,15 +71,20 @@ class ZoomDismissalInteractionController: NSObject {
                     initialSpringVelocity: 0,
                     options: [],
                     animations: {
-                        fromReferenceImageView.frame = fromReferenceImageViewFrame
-                        if fromVC is UINavigationController {
-                            fromVC.childViewControllers[0].view.backgroundColor = self.fromViewBackgroundColor
-                        } else {
-                            fromVC.view.backgroundColor = self.fromViewBackgroundColor
-                        }
+                        animator.transitionImageView?.frame = fromReferenceImageViewFrame
+                        animator.dimmingView?.alpha = 1.0
+                        fromVC.view.alpha = 1.0
                 },
                     completion: { completed in
+                        let nav = fromVC as! UINavigationController
+                        nav.navigationBar.backgroundColor = .clear
                         toReferenceImageView.isHidden = false
+                        fromReferenceImageView.isHidden = false
+                        contentFromVC.view.backgroundColor = self.fromViewBackgroundColor
+                        animator.transitionImageView?.removeFromSuperview()
+                        animator.dimmingView?.removeFromSuperview()
+                        animator.transitionImageView = nil
+                        animator.dimmingView = nil
                         transitionContext.cancelInteractiveTransition()
                         transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
                         self.transitionContext = nil
@@ -80,13 +99,24 @@ class ZoomDismissalInteractionController: NSObject {
     
     func backgroundAlphaFor(view: UIView, withPanningVerticalDelta verticalDelta: CGFloat) -> CGFloat {
         let startingAlpha:CGFloat = 1.0
-        let finalAlpha: CGFloat = 0.1
+        let finalAlpha: CGFloat = 0.0
         let totalAvailableAlpha = startingAlpha - finalAlpha
+        
+        let maximumDelta = view.bounds.height / 4.0
+        let deltaAsPercentageOfMaximun = min(abs(verticalDelta) / maximumDelta, 1.0)
+        
+        return startingAlpha - (deltaAsPercentageOfMaximun * totalAvailableAlpha)
+    }
+    
+    func scaleFor(view: UIView, withPanningVerticalDelta verticalDelta: CGFloat) -> CGFloat {
+        let startingScale:CGFloat = 1.0
+        let finalScale: CGFloat = 0.5
+        let totalAvailableScale = startingScale - finalScale
         
         let maximumDelta = view.bounds.height / 2.0
         let deltaAsPercentageOfMaximun = min(abs(verticalDelta) / maximumDelta, 1.0)
         
-        return startingAlpha - (deltaAsPercentageOfMaximun * totalAvailableAlpha)
+        return startingScale - (deltaAsPercentageOfMaximun * totalAvailableScale)
     }
 }
 
@@ -94,18 +124,44 @@ extension ZoomDismissalInteractionController: UIViewControllerInteractiveTransit
     func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
         self.transitionContext = transitionContext
         
+        let containerView = transitionContext.containerView
+        
         guard let animator = self.animator as? PhotoZoomAnimator,
+            let fromVC = transitionContext.viewController(forKey: .from),
+            let toVC = transitionContext.viewController(forKey: .to),
             let fromReferenceImageViewFrame = animator.fromDelegate?.referenceImageViewFrameInTransitioningView(for: animator),
-            let fromVC = transitionContext.viewController(forKey: .from) else {
+            let fromReferenceImageView = animator.fromDelegate?.referenceImageView(for: animator)
+             else {
                 return
         }
         
-        self.fromReferenceImageViewFrame = fromReferenceImageViewFrame
-        
+        let contentFromVC: UIViewController
         if fromVC is UINavigationController {
-            self.fromViewBackgroundColor = UIColor(cgColor: fromVC.childViewControllers[0].view.backgroundColor!.cgColor)
+            contentFromVC = fromVC.childViewControllers[0]
         } else {
-            self.fromViewBackgroundColor = UIColor(cgColor: fromVC.view.backgroundColor!.cgColor)
+            contentFromVC = fromVC
+        }
+        
+        self.fromViewBackgroundColor = UIColor(cgColor: contentFromVC.view.backgroundColor!.cgColor)
+        self.fromReferenceImageViewFrame = fromReferenceImageViewFrame
+
+        let referenceImage = fromReferenceImageView.image!
+        
+        if animator.dimmingView == nil {
+            let dimmingView = UIView(frame: toVC.view.bounds)
+            dimmingView.backgroundColor = self.fromViewBackgroundColor
+            dimmingView.alpha = 1.0
+            animator.dimmingView = dimmingView
+            containerView.insertSubview(dimmingView, belowSubview: fromVC.view)
+        }
+        
+        if animator.transitionImageView == nil {
+            let transitionImageView = UIImageView(image: referenceImage)
+            transitionImageView.contentMode = .scaleAspectFill
+            transitionImageView.clipsToBounds = true
+            transitionImageView.frame = fromReferenceImageViewFrame
+            animator.transitionImageView = transitionImageView
+            containerView.insertSubview(transitionImageView, belowSubview: fromVC.view)
         }
         
         
