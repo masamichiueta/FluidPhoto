@@ -96,4 +96,16 @@ extension PhotoZoomViewController: UIScrollViewDelegate {
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         updateConstraintsForSize(self.navigationController!.view.bounds.size)
     }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if scrollView.zoomScale != scrollView.minimumZoomScale {
+            UIView.animate(withDuration: 0.25,
+                           animations: {
+                            self.view.backgroundColor = .black
+                            self.navigationController?.navigationBar.alpha = 0
+            }, completion: { completed in
+                
+            })
+        }
+    }
 }

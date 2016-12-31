@@ -32,7 +32,7 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
     var singleTapGestureRecognizer: UITapGestureRecognizer!
     var fullScreen: Bool = false
     
-    var transitionController = ZoomTransitionController()
+    var transitionController = ZoomTransitionController(duration: 0.5)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,7 +108,7 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
             UIView.animate(withDuration: 0.25,
                            animations: {
                             self.view.backgroundColor = .white
-                            self.navigationController?.setNavigationBarHidden(false, animated: true)
+                            self.navigationController?.navigationBar.alpha = 1
             }, completion: { completed in
                 self.fullScreen = false
             })
@@ -116,7 +116,7 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
             UIView.animate(withDuration: 0.25,
                            animations: {
                             self.view.backgroundColor = .black
-                            self.navigationController?.setNavigationBarHidden(true, animated: true)
+                            self.navigationController?.navigationBar.alpha = 0
             }, completion: { completed in
                 self.fullScreen = true
             })

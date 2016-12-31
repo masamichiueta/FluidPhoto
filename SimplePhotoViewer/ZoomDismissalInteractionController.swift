@@ -19,16 +19,14 @@ class ZoomDismissalInteractionController: NSObject {
     func didPanWith(gestureRecognizer: UIPanGestureRecognizer) {
         
         guard let transitionContext = self.transitionContext,
-            let animator = self.animator as? PhotoZoomAnimator else {
-            return
-        }
-        
-        guard let fromVC = transitionContext.viewController(forKey: .from),
+            let animator = self.animator as? PhotoZoomAnimator,
+            let transitionImageView = animator.transitionImageView,
+            let dimmingView = animator.dimmingView,
+            let fromVC = transitionContext.viewController(forKey: .from),
             let fromReferenceImageView = animator.fromDelegate?.referenceImageView(for: animator),
             let toReferenceImageView = animator.toDelegate?.referenceImageView(for: animator),
-            let fromReferenceImageViewFrame = self.fromReferenceImageViewFrame
-            else {
-                return
+            let fromReferenceImageViewFrame = self.fromReferenceImageViewFrame else {
+            return
         }
         
         let contentFromVC: UIViewController
@@ -51,19 +49,20 @@ class ZoomDismissalInteractionController: NSObject {
         
         contentFromVC.view.backgroundColor = .clear
         fromVC.view.alpha = backgroundAlpha
-        animator.dimmingView?.alpha = backgroundAlpha
+        dimmingView.alpha = backgroundAlpha
         
-        animator.transitionImageView?.transform = CGAffineTransform(scaleX: scale, y: scale)
+        transitionImageView.transform = CGAffineTransform(scaleX: scale, y: scale)
         let newCenter = CGPoint(x: anchorPoint.x + translatedPoint.x, y: anchorPoint.y + translatedPoint.y)
-        
-        animator.transitionImageView?.center = newCenter
-
+        transitionImageView.center = newCenter
         
         toReferenceImageView.isHidden = true
         
         if gestureRecognizer.state == .ended {
             let velocity = gestureRecognizer.velocity(in: fromVC.view)
+            
             if velocity.y < 0 || newCenter.y < anchorPoint.y {
+                
+                //cancel
                 UIView.animate(
                     withDuration: animator.duration,
                     delay: 0,
@@ -71,20 +70,27 @@ class ZoomDismissalInteractionController: NSObject {
                     initialSpringVelocity: 0,
                     options: [],
                     animations: {
-                        animator.transitionImageView?.frame = fromReferenceImageViewFrame
-                        animator.dimmingView?.alpha = 1.0
+                        transitionImageView.frame = fromReferenceImageViewFrame
+                        dimmingView.alpha = 1.0
                         fromVC.view.alpha = 1.0
                 },
                     completion: { completed in
-                        let nav = fromVC as! UINavigationController
-                        nav.navigationBar.backgroundColor = .clear
+                        
+                        if fromVC is UINavigationController {
+                            let nav = fromVC as! UINavigationController
+                            nav.navigationBar.backgroundColor = .clear
+                        }
+                        
+                        contentFromVC.view.backgroundColor = self.fromViewBackgroundColor
+                        
                         toReferenceImageView.isHidden = false
                         fromReferenceImageView.isHidden = false
-                        contentFromVC.view.backgroundColor = self.fromViewBackgroundColor
-                        animator.transitionImageView?.removeFromSuperview()
-                        animator.dimmingView?.removeFromSuperview()
+                        
+                        transitionImageView.removeFromSuperview()
+                        dimmingView.removeFromSuperview()
                         animator.transitionImageView = nil
                         animator.dimmingView = nil
+                        
                         transitionContext.cancelInteractiveTransition()
                         transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
                         self.transitionContext = nil
@@ -92,6 +98,7 @@ class ZoomDismissalInteractionController: NSObject {
                 return
             }
             
+            //start animation
             animator.animateTransition(using: transitionContext)
             self.transitionContext = nil
         }

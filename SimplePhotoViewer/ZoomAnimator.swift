@@ -48,7 +48,6 @@ class PhotoZoomAnimator: NSObject {
         let toContentVC: UIViewController
         if toVC is UINavigationController {
             toContentVC = toVC.childViewControllers[0]
-            
             let nav = toVC as! UINavigationController
             nav.navigationBar.backgroundColor = .white
         } else {
@@ -96,10 +95,14 @@ class PhotoZoomAnimator: NSObject {
                         self.dimmingView?.alpha = 1.0
         },
                        completion: { completed in
-                        
-                        let nav = toVC as! UINavigationController
-                        nav.navigationBar.backgroundColor = .clear
+                    
                         toVC.childViewControllers[0].view.backgroundColor = toContentVCOriginalBackgroundColor
+                        
+                        if toVC is UINavigationController {
+                            let nav = toVC as! UINavigationController
+                            nav.navigationBar.backgroundColor = .clear
+                        }
+                        
                         self.transitionImageView?.removeFromSuperview()
                         self.dimmingView?.removeFromSuperview()
                         toReferenceImageView.isHidden = false
@@ -141,8 +144,6 @@ class PhotoZoomAnimator: NSObject {
         
         let fromContentVCOriginalBackgroundColor = UIColor(cgColor: fromContentVC.view.backgroundColor!.cgColor)
         fromContentVC.view.backgroundColor = .clear
-        
-        
         
         toReferenceImageView.isHidden = true
         
@@ -188,14 +189,19 @@ class PhotoZoomAnimator: NSObject {
                         self.transitionImageView?.frame = finalTransitionSize
         },
                        completion: { completed in
-                        let nav = fromVC as! UINavigationController
-                        nav.navigationBar.backgroundColor = .clear
+                        
+                        fromContentVC.view.backgroundColor = fromContentVCOriginalBackgroundColor
+                        
+                        if fromVC is UINavigationController {
+                            let nav = fromVC as! UINavigationController
+                            nav.navigationBar.backgroundColor = .clear
+                        }
+                        
                         self.dimmingView?.removeFromSuperview()
                         self.transitionImageView?.removeFromSuperview()
                         toReferenceImageView.isHidden = false
                         fromReferenceImageView.isHidden = false
-                        fromContentVC.view.backgroundColor = fromContentVCOriginalBackgroundColor
-                            
+                        
                         self.toDelegate?.transitionDidEndWith(zoomAnimator: self)
                         self.fromDelegate?.transitionDidEndWith(zoomAnimator: self)
                         transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
