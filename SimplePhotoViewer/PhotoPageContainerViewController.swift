@@ -35,7 +35,6 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
     
     var panGestureRecognizer: UIPanGestureRecognizer!
     var singleTapGestureRecognizer: UITapGestureRecognizer!
-    var fullScreen: Bool = false
     
     var transitionController = ZoomTransitionController()
     
@@ -127,7 +126,6 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
                             self.view.backgroundColor = .black
                             self.navigationController?.navigationBar.alpha = 0
             }, completion: { completed in
-                self.fullScreen = true
             })
         } else {
             UIView.animate(withDuration: 0.25,
@@ -135,7 +133,6 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
                             self.view.backgroundColor = .white
                             self.navigationController?.navigationBar.alpha = 1
             }, completion: { completed in
-                self.fullScreen = false
             })
         }
     }
