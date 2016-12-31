@@ -17,7 +17,6 @@ protocol PhotoZoomAnimatorDelegate: class {
 
 class PhotoZoomAnimator: NSObject {
     
-    var duration: TimeInterval
     var presenting: Bool = true
     var modalPresentationStyle: UIModalPresentationStyle?
     
@@ -26,11 +25,7 @@ class PhotoZoomAnimator: NSObject {
     
     var transitionImageView: UIImageView?
     var dimmingView: UIView?
-    
-    init(duration: TimeInterval) {
-        self.duration = duration
-    }
-    
+        
     fileprivate func animateZoomInTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView
         
@@ -180,31 +175,28 @@ class PhotoZoomAnimator: NSObject {
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext),
                        delay: 0,
-                       usingSpringWithDamping: 0.8,
-                       initialSpringVelocity: 0,
                        options: [],
                        animations: {
                         fromVC.view.alpha = 0
                         self.dimmingView?.alpha = 0
                         self.transitionImageView?.frame = finalTransitionSize
-        },
-                       completion: { completed in
-                        
-                        fromContentVC.view.backgroundColor = fromContentVCOriginalBackgroundColor
-                        
-                        if fromVC is UINavigationController {
-                            let nav = fromVC as! UINavigationController
-                            nav.navigationBar.backgroundColor = .clear
-                        }
-                        
-                        self.dimmingView?.removeFromSuperview()
-                        self.transitionImageView?.removeFromSuperview()
-                        toReferenceImageView.isHidden = false
-                        fromReferenceImageView.isHidden = false
-                        
-                        self.toDelegate?.transitionDidEndWith(zoomAnimator: self)
-                        self.fromDelegate?.transitionDidEndWith(zoomAnimator: self)
-                        transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+        }, completion: { completed in
+            
+            fromContentVC.view.backgroundColor = fromContentVCOriginalBackgroundColor
+            
+            if fromVC is UINavigationController {
+                let nav = fromVC as! UINavigationController
+                nav.navigationBar.backgroundColor = .clear
+            }
+            
+            self.dimmingView?.removeFromSuperview()
+            self.transitionImageView?.removeFromSuperview()
+            toReferenceImageView.isHidden = false
+            fromReferenceImageView.isHidden = false
+            
+            self.toDelegate?.transitionDidEndWith(zoomAnimator: self)
+            self.fromDelegate?.transitionDidEndWith(zoomAnimator: self)
+            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         })
     }
     
@@ -228,7 +220,11 @@ class PhotoZoomAnimator: NSObject {
 
 extension PhotoZoomAnimator: UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return self.duration
+        if self.presenting {
+            return 0.5
+        } else {
+            return 0.25
+        }
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {

@@ -14,6 +14,11 @@ protocol PhotoPageContainerViewControllerDelegate: class {
 
 class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDelegate {
     
+    enum ScreenMode {
+        case full, normal
+    }
+    var currentMode: ScreenMode = .normal
+    
     weak var delegate: PhotoPageContainerViewControllerDelegate?
     
     var pageViewController: UIPageViewController {
@@ -32,7 +37,7 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
     var singleTapGestureRecognizer: UITapGestureRecognizer!
     var fullScreen: Bool = false
     
-    var transitionController = ZoomTransitionController(duration: 0.5)
+    var transitionController = ZoomTransitionController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +52,7 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
         self.pageViewController.view.addGestureRecognizer(self.singleTapGestureRecognizer)
         
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "\(PhotoZoomViewController.self)") as! PhotoZoomViewController
+        vc.delegate = self
         vc.image = self.photos[self.currentIndex]
         self.singleTapGestureRecognizer.require(toFail: vc.doubleTapGestureRecognizer)
         let viewControllers = [
@@ -104,15 +110,18 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
     }
     
     func didSingleTapWith(gestureRecognizer: UITapGestureRecognizer) {
-        if self.fullScreen {
-            UIView.animate(withDuration: 0.25,
-                           animations: {
-                            self.view.backgroundColor = .white
-                            self.navigationController?.navigationBar.alpha = 1
-            }, completion: { completed in
-                self.fullScreen = false
-            })
+        if self.currentMode == .full {
+            changeScreenMode(to: .normal)
+            self.currentMode = .normal
         } else {
+            changeScreenMode(to: .full)
+            self.currentMode = .full
+        }
+
+    }
+    
+    func changeScreenMode(to: ScreenMode) {
+        if to == .full {
             UIView.animate(withDuration: 0.25,
                            animations: {
                             self.view.backgroundColor = .black
@@ -120,8 +129,15 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
             }, completion: { completed in
                 self.fullScreen = true
             })
+        } else {
+            UIView.animate(withDuration: 0.25,
+                           animations: {
+                            self.view.backgroundColor = .white
+                            self.navigationController?.navigationBar.alpha = 1
+            }, completion: { completed in
+                self.fullScreen = false
+            })
         }
-        
     }
 }
 
@@ -134,6 +150,7 @@ extension PhotoPageContainerViewController: UIPageViewControllerDelegate, UIPage
         }
         
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "\(PhotoZoomViewController.self)") as! PhotoZoomViewController
+        vc.delegate = self
         vc.image = self.photos[currentIndex - 1]
         self.singleTapGestureRecognizer.require(toFail: vc.doubleTapGestureRecognizer)
         return vc
@@ -147,6 +164,7 @@ extension PhotoPageContainerViewController: UIPageViewControllerDelegate, UIPage
         }
         
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "\(PhotoZoomViewController.self)") as! PhotoZoomViewController
+        vc.delegate = self
         self.singleTapGestureRecognizer.require(toFail: vc.doubleTapGestureRecognizer)
         vc.image = self.photos[currentIndex + 1]
         return vc
@@ -176,6 +194,16 @@ extension PhotoPageContainerViewController: UIPageViewControllerDelegate, UIPage
         self.nextIndex = nil
     }
     
+}
+
+extension PhotoPageContainerViewController: PhotoZoomViewControllerDelegate {
+    
+    func photoZoomViewController(_ photoZoomViewController: PhotoZoomViewController, scrollViewWillBeginDragging scrollView: UIScrollView) {
+        
+        if scrollView.zoomScale != scrollView.minimumZoomScale {
+            self.changeScreenMode(to: .full)
+        }
+    }
 }
 
 extension PhotoPageContainerViewController: PhotoZoomAnimatorDelegate {

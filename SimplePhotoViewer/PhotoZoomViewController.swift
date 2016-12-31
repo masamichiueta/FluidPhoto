@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol PhotoZoomViewControllerDelegate: class {
+    func photoZoomViewController(_ photoZoomViewController: PhotoZoomViewController, scrollViewWillBeginDragging scrollView: UIScrollView)
+}
+
 class PhotoZoomViewController: UIViewController {
     
     @IBOutlet weak var imageViewBottomConstraint: NSLayoutConstraint!
@@ -16,6 +20,8 @@ class PhotoZoomViewController: UIViewController {
     @IBOutlet weak var imageViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var imageView: UIImageView!
+    
+    weak var delegate: PhotoZoomViewControllerDelegate?
     
     var image: UIImage!
     
@@ -98,14 +104,6 @@ extension PhotoZoomViewController: UIScrollViewDelegate {
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        if scrollView.zoomScale != scrollView.minimumZoomScale {
-            UIView.animate(withDuration: 0.25,
-                           animations: {
-                            self.view.backgroundColor = .black
-                            self.navigationController?.navigationBar.alpha = 0
-            }, completion: { completed in
-                
-            })
-        }
+        self.delegate?.photoZoomViewController(self, scrollViewWillBeginDragging: scrollView)
     }
 }

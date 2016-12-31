@@ -64,7 +64,7 @@ class ZoomDismissalInteractionController: NSObject {
                 
                 //cancel
                 UIView.animate(
-                    withDuration: animator.duration,
+                    withDuration: 0.5,
                     delay: 0,
                     usingSpringWithDamping: 0.9,
                     initialSpringVelocity: 0,

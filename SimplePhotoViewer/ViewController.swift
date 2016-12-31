@@ -14,6 +14,8 @@ class ViewController: UIViewController {
     
     var photos: [UIImage]!
     
+    var selectedIndexPath: IndexPath!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.photos = [
@@ -64,8 +66,7 @@ class ViewController: UIViewController {
             vc.transitionController.fromDelegate = self
             vc.transitionController.toDelegate = vc
             vc.delegate = self
-            let selectedIndexPath = self.collectionView.indexPathsForSelectedItems!.first!
-            vc.currentIndex = selectedIndexPath.row
+            vc.currentIndex = self.selectedIndexPath.row
             vc.photos = self.photos
         }
     }
@@ -92,13 +93,18 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         cell.imageView.image = self.photos[indexPath.row]
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.selectedIndexPath = indexPath
+        self.performSegue(withIdentifier: "ShowPhotoPageView", sender: self)
+    }
 }
 
 
 extension ViewController: PhotoPageContainerViewControllerDelegate {
     func containerViewController(_ containerViewController: PhotoPageContainerViewController, indexDidUpdate currentIndex: Int) {
-        let indexPath = IndexPath(row: currentIndex, section: 0)
-        self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredVertically)
+        self.selectedIndexPath = IndexPath(row: currentIndex, section: 0)
+        self.collectionView.scrollToItem(at: self.selectedIndexPath, at: .centeredVertically, animated: false)
     }
 }
 
@@ -108,20 +114,30 @@ extension ViewController: PhotoZoomAnimatorDelegate {
     }
     
     func transitionDidEndWith(zoomAnimator: PhotoZoomAnimator) {
+        let cell = self.collectionView.cellForItem(at: self.selectedIndexPath) as! PhotoCollectionViewCell
         
+        let cellFrame = self.collectionView.convert(cell.frame, to: self.view)
+        
+        if cellFrame.minY < self.collectionView.contentInset.top {
+            self.collectionView.scrollToItem(at: self.selectedIndexPath, at: .top, animated: false)
+        } else if cellFrame.maxY > self.view.frame.height - self.collectionView.contentInset.bottom {
+            self.collectionView.scrollToItem(at: self.selectedIndexPath, at: .bottom, animated: false)
+        }
     }
     
     func referenceImageView(for zoomAnimator: PhotoZoomAnimator) -> UIImageView? {
-        let selectedIndexPath = self.collectionView.indexPathsForSelectedItems!.first!
-        let cell = self.collectionView.cellForItem(at: selectedIndexPath) as! PhotoCollectionViewCell
-        
+        let cell = self.collectionView.cellForItem(at: self.selectedIndexPath) as! PhotoCollectionViewCell
         return cell.imageView
     }
     
     func referenceImageViewFrameInTransitioningView(for zoomAnimator: PhotoZoomAnimator) -> CGRect? {
-        let selectedIndexPath = self.collectionView.indexPathsForSelectedItems!.first!
-        let cell = self.collectionView.cellForItem(at: selectedIndexPath) as! PhotoCollectionViewCell
+        let cell = self.collectionView.cellForItem(at: self.selectedIndexPath) as! PhotoCollectionViewCell
+        let cellFrame = self.collectionView.convert(cell.frame, to: self.view)
         
-        return self.collectionView.convert(cell.frame, to: self.view)
+        if cellFrame.minY < self.collectionView.contentInset.top {
+            return CGRect(x: cellFrame.minX, y: self.collectionView.contentInset.top, width: cellFrame.width, height: cellFrame.height - (self.collectionView.contentInset.top - cellFrame.minY))
+        }
+        
+        return cellFrame
     }
 }

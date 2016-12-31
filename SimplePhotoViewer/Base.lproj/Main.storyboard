@@ -51,7 +51,6 @@
                                         </constraints>
                                         <connections>
                                             <outlet property="imageView" destination="EKY-87-WYU" id="Wpt-4g-Tsu"/>
-                                            <segue destination="2xc-xZ-dEQ" kind="presentation" identifier="ShowPhotoPageView" modalPresentationStyle="overCurrentContext" id="nKi-qH-ZO1"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -72,6 +71,7 @@
                     <navigationItem key="navigationItem" id="0Aa-Nu-hDi"/>
                     <connections>
                         <outlet property="collectionView" destination="P1m-wF-aMS" id="6Xj-ZS-wMX"/>
+                        <segue destination="2xc-xZ-dEQ" kind="presentation" identifier="ShowPhotoPageView" modalPresentationStyle="overCurrentContext" id="BrU-qh-Fpp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -17,12 +17,8 @@ class ZoomTransitionController: NSObject, UIViewControllerTransitioningDelegate 
     weak var fromDelegate: PhotoZoomAnimatorDelegate?
     weak var toDelegate: PhotoZoomAnimatorDelegate?
     
-    convenience override init() {
-        self.init(duration: 0.5)
-    }
-    
-    init(duration: CGFloat) {
-        animator = PhotoZoomAnimator(duration: TimeInterval(duration))
+    override init() {
+        animator = PhotoZoomAnimator()
         interactionController = ZoomDismissalInteractionController()
         super.init()
     }
