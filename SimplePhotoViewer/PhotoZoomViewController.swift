@@ -9,7 +9,7 @@
 import UIKit
 
 protocol PhotoZoomViewControllerDelegate: class {
-    func photoZoomViewController(_ photoZoomViewController: PhotoZoomViewController, scrollViewWillBeginDragging scrollView: UIScrollView)
+    func photoZoomViewController(_ photoZoomViewController: PhotoZoomViewController, scrollViewDidScroll scrollView: UIScrollView)
 }
 
 class PhotoZoomViewController: UIViewController {
@@ -84,12 +84,15 @@ class PhotoZoomViewController: UIViewController {
         let yOffset = max(0, (size.height - imageView.frame.height) / 2)
         imageViewTopConstraint.constant = yOffset
         imageViewBottomConstraint.constant = yOffset
-
+        
         let xOffset = max(0, (size.width - imageView.frame.width) / 2)
         imageViewLeadingConstraint.constant = xOffset
         imageViewTrailingConstraint.constant = xOffset
         
+        let contentHeight = yOffset * 2 + self.imageView.frame.height
+        
         view.layoutIfNeeded()
+        self.scrollView.contentSize = CGSize(width: self.scrollView.contentSize.width, height: contentHeight)
     }
 
 }
@@ -100,10 +103,10 @@ extension PhotoZoomViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        updateConstraintsForSize(self.navigationController!.view.bounds.size)
+        updateConstraintsForSize(self.view.bounds.size)
     }
     
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        self.delegate?.photoZoomViewController(self, scrollViewWillBeginDragging: scrollView)
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.delegate?.photoZoomViewController(self, scrollViewDidScroll: scrollView)
     }
 }

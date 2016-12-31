@@ -198,10 +198,10 @@ extension PhotoPageContainerViewController: UIPageViewControllerDelegate, UIPage
 
 extension PhotoPageContainerViewController: PhotoZoomViewControllerDelegate {
     
-    func photoZoomViewController(_ photoZoomViewController: PhotoZoomViewController, scrollViewWillBeginDragging scrollView: UIScrollView) {
-        
-        if scrollView.zoomScale != scrollView.minimumZoomScale {
+    func photoZoomViewController(_ photoZoomViewController: PhotoZoomViewController, scrollViewDidScroll scrollView: UIScrollView) {
+        if scrollView.zoomScale != scrollView.minimumZoomScale && self.currentMode != .full {
             self.changeScreenMode(to: .full)
+            self.currentMode = .full
         }
     }
 }
