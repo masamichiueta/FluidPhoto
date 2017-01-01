@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="q6P-dP-Dri">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FGA-or-OvA">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Photos-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SimplePhotoViewer" customModuleProvider="target" sceneMemberID="viewController">
@@ -68,17 +68,17 @@
                             <constraint firstAttribute="bottom" secondItem="P1m-wF-aMS" secondAttribute="bottom" id="zcg-fF-P9e"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="0Aa-Nu-hDi"/>
+                    <navigationItem key="navigationItem" title="Photos" id="0Aa-Nu-hDi"/>
                     <connections>
                         <outlet property="collectionView" destination="P1m-wF-aMS" id="6Xj-ZS-wMX"/>
-                        <segue destination="2xc-xZ-dEQ" kind="presentation" identifier="ShowPhotoPageView" modalPresentationStyle="overCurrentContext" id="BrU-qh-Fpp"/>
+                        <segue destination="la0-MI-Tyg" kind="show" identifier="ShowPhotoPageView" id="OHr-Ee-6Ir"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1052" y="778"/>
+            <point key="canvasLocation" x="1991.2" y="777.66116941529242"/>
         </scene>
-        <!--Photo Page Container View Controller-->
+        <!--Zoom-->
         <scene sceneID="AFh-kq-a6v">
             <objects>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" id="la0-MI-Tyg" customClass="PhotoPageContainerViewController" customModule="SimplePhotoViewer" customModuleProvider="target" sceneMemberID="viewController">
@@ -96,27 +96,33 @@
                                     <segue destination="L3c-32-H0D" kind="embed" id="Mkz-an-U4U"/>
                                 </connections>
                             </containerView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vzj-yE-vHL">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <items>
+                                    <barButtonItem title="Item" id="Ybn-qE-VyJ"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="vzj-yE-vHL" secondAttribute="trailing" id="RO5-1S-K5x"/>
+                            <constraint firstItem="vzj-yE-vHL" firstAttribute="leading" secondItem="a2u-Rd-dOr" secondAttribute="leading" id="USc-py-W7F"/>
                             <constraint firstAttribute="bottom" secondItem="wv0-WU-2s8" secondAttribute="bottom" id="WbD-df-h9c"/>
                             <constraint firstItem="wv0-WU-2s8" firstAttribute="leading" secondItem="a2u-Rd-dOr" secondAttribute="leading" id="bGe-Dn-IoP"/>
+                            <constraint firstAttribute="bottom" secondItem="vzj-yE-vHL" secondAttribute="bottom" id="hja-Eb-Efa"/>
                             <constraint firstItem="wv0-WU-2s8" firstAttribute="top" secondItem="a2u-Rd-dOr" secondAttribute="top" id="oo6-xf-Vab"/>
                             <constraint firstAttribute="trailing" secondItem="wv0-WU-2s8" secondAttribute="trailing" id="yXl-F2-vTO"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="mJu-ms-jke">
-                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="yyw-YD-M3X">
-                            <connections>
-                                <segue destination="QxS-OD-MWi" kind="unwind" unwindAction="backToViewControllerWithSegue:" id="1NT-r4-8MF"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Zoom" id="mJu-ms-jke"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="toolBar" destination="vzj-yE-vHL" id="C3a-CO-Wub"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nkv-rB-Lfh" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="QxS-OD-MWi" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2694" y="778"/>
+            <point key="canvasLocation" x="2911.1999999999998" y="777.66116941529242"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="WNg-Ff-hE3">
@@ -124,7 +130,7 @@
                 <pageViewController automaticallyAdjustsScrollViewInsets="NO" transitionStyle="scroll" pageSpacing="10" navigationOrientation="horizontal" spineLocation="none" id="L3c-32-H0D" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b1W-23-097" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3526" y="778"/>
+            <point key="canvasLocation" x="3748" y="777.66116941529242"/>
         </scene>
         <!--Photo Zoom View Controller-->
         <scene sceneID="ph8-tL-GV2">
@@ -173,12 +179,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Id-vD-CwF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4441" y="778"/>
+            <point key="canvasLocation" x="4740" y="777.66116941529242"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Item-->
         <scene sceneID="OPG-6z-vVw">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="q6P-dP-Dri" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="d9T-6A-9Mk"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="mBd-5W-k9t">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -191,25 +198,24 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="okW-Dq-VUD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="301.60000000000002" y="777.66116941529242"/>
+            <point key="canvasLocation" x="1108" y="778"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="691-YU-rGg">
+        <!--Tab Bar Controller-->
+        <scene sceneID="jWp-ie-9xX">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="2xc-xZ-dEQ" sceneMemberID="viewController">
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="FGA-or-OvA" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="qaU-7c-hqN">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="5j0-yz-PPx">
                         <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
                     <connections>
-                        <segue destination="la0-MI-Tyg" kind="relationship" relationship="rootViewController" id="IHD-sT-b52"/>
+                        <segue destination="q6P-dP-Dri" kind="relationship" relationship="viewControllers" id="Hbm-4B-4aF"/>
                     </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="0Dk-eD-w0p" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fgI-gm-qfh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1932" y="778"/>
+            <point key="canvasLocation" x="301.60000000000002" y="777.66116941529242"/>
         </scene>
     </scenes>
     <resources>

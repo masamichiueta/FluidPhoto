@@ -8,12 +8,12 @@
 
 import UIKit
 
-class ZoomTransitionController: NSObject, UIViewControllerTransitioningDelegate {
+class ZoomTransitionController: NSObject {
     
     let animator: PhotoZoomAnimator
     let interactionController: ZoomDismissalInteractionController
     var isInteractive: Bool = false
-    
+
     weak var fromDelegate: PhotoZoomAnimatorDelegate?
     weak var toDelegate: PhotoZoomAnimatorDelegate?
     
@@ -23,6 +23,13 @@ class ZoomTransitionController: NSObject, UIViewControllerTransitioningDelegate 
         super.init()
     }
     
+    func didPanWith(gestureRecognizer: UIPanGestureRecognizer) {
+        self.interactionController.didPanWith(gestureRecognizer: gestureRecognizer)
+    }
+    
+}
+
+extension ZoomTransitionController: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         self.animator.presenting = true
         self.animator.fromDelegate = fromDelegate
@@ -35,7 +42,6 @@ class ZoomTransitionController: NSObject, UIViewControllerTransitioningDelegate 
         let tmp = self.fromDelegate
         self.animator.fromDelegate = self.toDelegate
         self.animator.toDelegate = tmp
-        self.animator.modalPresentationStyle = dismissed.modalPresentationStyle
         return self.animator
     }
     
@@ -47,9 +53,34 @@ class ZoomTransitionController: NSObject, UIViewControllerTransitioningDelegate 
         self.interactionController.animator = animator
         return self.interactionController
     }
-    
-    func didPanWith(gestureRecognizer: UIPanGestureRecognizer) {
-        self.interactionController.didPanWith(gestureRecognizer: gestureRecognizer)
+
+}
+
+extension ZoomTransitionController: UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        
+        if operation == .push {
+            self.animator.presenting = true
+            self.animator.fromDelegate = fromDelegate
+            self.animator.toDelegate = toDelegate
+        } else {
+            self.animator.presenting = false
+            let tmp = self.fromDelegate
+            self.animator.fromDelegate = self.toDelegate
+            self.animator.toDelegate = tmp
+        }
+        
+        return self.animator
     }
     
+    func navigationController(_ navigationController: UINavigationController, interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        
+        if !self.isInteractive {
+            return nil
+        }
+        
+        self.interactionController.animator = animator
+        return self.interactionController
+    }
+
 }

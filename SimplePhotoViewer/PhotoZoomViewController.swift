@@ -24,6 +24,7 @@ class PhotoZoomViewController: UIViewController {
     weak var delegate: PhotoZoomViewControllerDelegate?
     
     var image: UIImage!
+    var index: Int = 0
     
     var doubleTapGestureRecognizer: UITapGestureRecognizer!
     

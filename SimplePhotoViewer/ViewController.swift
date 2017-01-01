@@ -58,11 +58,17 @@ class ViewController: UIViewController {
         ]
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowPhotoPageView" {
-            let nav = segue.destination as! UINavigationController
-            let vc = nav.viewControllers[0] as! PhotoPageContainerViewController
-            nav.transitioningDelegate = vc.transitionController
+            let nav = self.navigationController
+            let vc = segue.destination as! PhotoPageContainerViewController
+            nav?.delegate = vc.transitionController
             vc.transitionController.fromDelegate = self
             vc.transitionController.toDelegate = vc
             vc.delegate = self
@@ -131,7 +137,9 @@ extension ViewController: PhotoZoomAnimatorDelegate {
     }
     
     func referenceImageViewFrameInTransitioningView(for zoomAnimator: PhotoZoomAnimator) -> CGRect? {
+        
         let cell = self.collectionView.cellForItem(at: self.selectedIndexPath) as! PhotoCollectionViewCell
+        
         let cellFrame = self.collectionView.convert(cell.frame, to: self.view)
         
         if cellFrame.minY < self.collectionView.contentInset.top {

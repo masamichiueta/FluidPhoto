@@ -17,19 +17,18 @@ protocol PhotoZoomAnimatorDelegate: class {
 
 class PhotoZoomAnimator: NSObject {
     
-    var presenting: Bool = true
-    var modalPresentationStyle: UIModalPresentationStyle?
-    
     weak var fromDelegate: PhotoZoomAnimatorDelegate?
     weak var toDelegate: PhotoZoomAnimatorDelegate?
     
     var transitionImageView: UIImageView?
-    var dimmingView: UIView?
-        
+    var presenting: Bool = true
+    
     fileprivate func animateZoomInTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        
         let containerView = transitionContext.containerView
         
         guard let toVC = transitionContext.viewController(forKey: .to),
+            let fromVC = transitionContext.viewController(forKey: .from),
             let fromReferenceImageView = self.fromDelegate?.referenceImageView(for: self),
             let toReferenceImageView = self.toDelegate?.referenceImageView(for: self),
             let fromReferenceImageViewFrame = self.fromDelegate?.referenceImageViewFrameInTransitioningView(for: self)
@@ -40,29 +39,9 @@ class PhotoZoomAnimator: NSObject {
         self.fromDelegate?.transitionWillStartWith(zoomAnimator: self)
         self.toDelegate?.transitionWillStartWith(zoomAnimator: self)
         
-        let toContentVC: UIViewController
-        if toVC is UINavigationController {
-            toContentVC = toVC.childViewControllers[0]
-            let nav = toVC as! UINavigationController
-            nav.navigationBar.backgroundColor = .white
-        } else {
-            toContentVC = toVC
-        }
-        
-        let toContentVCOriginalBackgroundColor = UIColor(cgColor: toContentVC.view.backgroundColor!.cgColor)
-        toContentVC.view.backgroundColor = .clear
-        
         toVC.view.alpha = 0
         toReferenceImageView.isHidden = true
         containerView.addSubview(toVC.view)
-        
-        if self.dimmingView == nil {
-            let dimmingView = UIView(frame: toVC.view.bounds)
-            dimmingView.backgroundColor = toContentVCOriginalBackgroundColor
-            dimmingView.alpha = 0
-            self.dimmingView = dimmingView
-            containerView.insertSubview(dimmingView, belowSubview: toVC.view)
-        }
         
         let referenceImage = fromReferenceImageView.image!
         
@@ -72,7 +51,7 @@ class PhotoZoomAnimator: NSObject {
             transitionImageView.clipsToBounds = true
             transitionImageView.frame = fromReferenceImageViewFrame
             self.transitionImageView = transitionImageView
-            containerView.insertSubview(transitionImageView, belowSubview: toVC.view)
+            containerView.addSubview(transitionImageView)
         }
         
         fromReferenceImageView.isHidden = true
@@ -87,28 +66,19 @@ class PhotoZoomAnimator: NSObject {
                        animations: {
                         self.transitionImageView?.frame = finalTransitionSize
                         toVC.view.alpha = 1.0
-                        self.dimmingView?.alpha = 1.0
+                        //fromVC.tabBarController?.tabBar.alpha = 0
         },
                        completion: { completed in
                     
-                        toVC.childViewControllers[0].view.backgroundColor = toContentVCOriginalBackgroundColor
-                        
-                        if toVC is UINavigationController {
-                            let nav = toVC as! UINavigationController
-                            nav.navigationBar.backgroundColor = .clear
-                        }
-                        
                         self.transitionImageView?.removeFromSuperview()
-                        self.dimmingView?.removeFromSuperview()
                         toReferenceImageView.isHidden = false
                         fromReferenceImageView.isHidden = false
                         
                         self.transitionImageView = nil
-                        self.dimmingView = nil
                         
+                        transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
                         self.toDelegate?.transitionDidEndWith(zoomAnimator: self)
                         self.fromDelegate?.transitionDidEndWith(zoomAnimator: self)
-                        transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         })
     }
     
@@ -128,29 +98,9 @@ class PhotoZoomAnimator: NSObject {
         self.fromDelegate?.transitionWillStartWith(zoomAnimator: self)
         self.toDelegate?.transitionWillStartWith(zoomAnimator: self)
         
-        let fromContentVC: UIViewController
-        if fromVC is UINavigationController {
-            fromContentVC = fromVC.childViewControllers[0]
-            let nav = fromVC as! UINavigationController
-            nav.navigationBar.backgroundColor = .white
-        } else {
-            fromContentVC = fromVC
-        }
-        
-        let fromContentVCOriginalBackgroundColor = UIColor(cgColor: fromContentVC.view.backgroundColor!.cgColor)
-        fromContentVC.view.backgroundColor = .clear
-        
         toReferenceImageView.isHidden = true
         
         let referenceImage = fromReferenceImageView.image!
-        
-        if self.dimmingView == nil {
-            let dimmingView = UIView(frame: toVC.view.bounds)
-            dimmingView.backgroundColor = fromContentVCOriginalBackgroundColor
-            dimmingView.alpha = 1.0
-            self.dimmingView = dimmingView
-            containerView.insertSubview(dimmingView, belowSubview: fromVC.view)
-        }
         
         if self.transitionImageView == nil {
             let transitionImageView = UIImageView(image: referenceImage)
@@ -158,19 +108,12 @@ class PhotoZoomAnimator: NSObject {
             transitionImageView.clipsToBounds = true
             transitionImageView.frame = fromReferenceImageViewFrame
             self.transitionImageView = transitionImageView
-            containerView.insertSubview(transitionImageView, belowSubview: fromVC.view)
+            containerView.addSubview(transitionImageView)
         }
         
-        if let modalPresentationStyle = self.modalPresentationStyle {
-            if modalPresentationStyle != .overCurrentContext {
-                containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
-            }
-        } else {
-            containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
-        }
-        
+        containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
         fromReferenceImageView.isHidden = true
-
+        
         let finalTransitionSize = toReferenceImageViewFrame
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext),
@@ -178,25 +121,18 @@ class PhotoZoomAnimator: NSObject {
                        options: [],
                        animations: {
                         fromVC.view.alpha = 0
-                        self.dimmingView?.alpha = 0
                         self.transitionImageView?.frame = finalTransitionSize
+                        //toVC.tabBarController?.tabBar.alpha = 1
         }, completion: { completed in
             
-            fromContentVC.view.backgroundColor = fromContentVCOriginalBackgroundColor
-            
-            if fromVC is UINavigationController {
-                let nav = fromVC as! UINavigationController
-                nav.navigationBar.backgroundColor = .clear
-            }
-            
-            self.dimmingView?.removeFromSuperview()
             self.transitionImageView?.removeFromSuperview()
             toReferenceImageView.isHidden = false
             fromReferenceImageView.isHidden = false
             
+            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
             self.toDelegate?.transitionDidEndWith(zoomAnimator: self)
             self.fromDelegate?.transitionDidEndWith(zoomAnimator: self)
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+
         })
     }
     

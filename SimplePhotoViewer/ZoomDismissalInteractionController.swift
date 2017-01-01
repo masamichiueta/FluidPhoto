@@ -14,29 +14,22 @@ class ZoomDismissalInteractionController: NSObject {
     var animator: UIViewControllerAnimatedTransitioning?
     
     var fromReferenceImageViewFrame: CGRect?
-    var fromViewBackgroundColor: UIColor?
+    var toReferenceImageViewFrame: CGRect?
     
     func didPanWith(gestureRecognizer: UIPanGestureRecognizer) {
         
         guard let transitionContext = self.transitionContext,
             let animator = self.animator as? PhotoZoomAnimator,
             let transitionImageView = animator.transitionImageView,
-            let dimmingView = animator.dimmingView,
             let fromVC = transitionContext.viewController(forKey: .from),
+            let toVC = transitionContext.viewController(forKey: .to),
             let fromReferenceImageView = animator.fromDelegate?.referenceImageView(for: animator),
             let toReferenceImageView = animator.toDelegate?.referenceImageView(for: animator),
-            let fromReferenceImageViewFrame = self.fromReferenceImageViewFrame else {
-            return
+            let fromReferenceImageViewFrame = self.fromReferenceImageViewFrame,
+            let toReferenceImageViewFrame = self.toReferenceImageViewFrame else {
+                return
         }
         
-        let contentFromVC: UIViewController
-        if fromVC is UINavigationController {
-            contentFromVC = fromVC.childViewControllers[0]
-            let nav = fromVC as! UINavigationController
-            nav.navigationBar.backgroundColor = .white
-        } else {
-            contentFromVC = fromVC
-        }
         
         fromReferenceImageView.isHidden = true
         
@@ -47,9 +40,7 @@ class ZoomDismissalInteractionController: NSObject {
         let backgroundAlpha = backgroundAlphaFor(view: fromVC.view, withPanningVerticalDelta: verticalDelta)
         let scale = scaleFor(view: fromVC.view, withPanningVerticalDelta: verticalDelta)
         
-        contentFromVC.view.backgroundColor = .clear
         fromVC.view.alpha = backgroundAlpha
-        dimmingView.alpha = backgroundAlpha
         
         transitionImageView.transform = CGAffineTransform(scaleX: scale, y: scale)
         let newCenter = CGPoint(x: anchorPoint.x + translatedPoint.x, y: anchorPoint.y + translatedPoint.y)
@@ -57,7 +48,12 @@ class ZoomDismissalInteractionController: NSObject {
         
         toReferenceImageView.isHidden = true
         
+        transitionContext.updateInteractiveTransition(1 - scale)
+        
+        toVC.tabBarController?.tabBar.alpha = 1 - backgroundAlpha
+        
         if gestureRecognizer.state == .ended {
+            
             let velocity = gestureRecognizer.velocity(in: fromVC.view)
             
             if velocity.y < 0 || newCenter.y < anchorPoint.y {
@@ -71,36 +67,47 @@ class ZoomDismissalInteractionController: NSObject {
                     options: [],
                     animations: {
                         transitionImageView.frame = fromReferenceImageViewFrame
-                        dimmingView.alpha = 1.0
                         fromVC.view.alpha = 1.0
+                        toVC.tabBarController?.tabBar.alpha = 0
                 },
                     completion: { completed in
                         
-                        if fromVC is UINavigationController {
-                            let nav = fromVC as! UINavigationController
-                            nav.navigationBar.backgroundColor = .clear
-                        }
-                        
-                        contentFromVC.view.backgroundColor = self.fromViewBackgroundColor
-                        
                         toReferenceImageView.isHidden = false
                         fromReferenceImageView.isHidden = false
-                        
                         transitionImageView.removeFromSuperview()
-                        dimmingView.removeFromSuperview()
                         animator.transitionImageView = nil
-                        animator.dimmingView = nil
-                        
                         transitionContext.cancelInteractiveTransition()
                         transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+                        animator.toDelegate?.transitionDidEndWith(zoomAnimator: animator)
+                        animator.fromDelegate?.transitionDidEndWith(zoomAnimator: animator)
                         self.transitionContext = nil
                 })
                 return
             }
             
             //start animation
-            animator.animateTransition(using: transitionContext)
-            self.transitionContext = nil
+            let finalTransitionSize = toReferenceImageViewFrame
+            
+            UIView.animate(withDuration: 0.25,
+                           delay: 0,
+                           options: [],
+                           animations: {
+                            fromVC.view.alpha = 0
+                            transitionImageView.frame = finalTransitionSize
+                            toVC.tabBarController?.tabBar.alpha = 1
+                            
+            }, completion: { completed in
+                
+                transitionImageView.removeFromSuperview()
+                toReferenceImageView.isHidden = false
+                fromReferenceImageView.isHidden = false
+                
+                self.transitionContext?.finishInteractiveTransition()
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+                animator.toDelegate?.transitionDidEndWith(zoomAnimator: animator)
+                animator.fromDelegate?.transitionDidEndWith(zoomAnimator: animator)
+                self.transitionContext = nil
+            })
         }
     }
     
@@ -137,40 +144,28 @@ extension ZoomDismissalInteractionController: UIViewControllerInteractiveTransit
             let fromVC = transitionContext.viewController(forKey: .from),
             let toVC = transitionContext.viewController(forKey: .to),
             let fromReferenceImageViewFrame = animator.fromDelegate?.referenceImageViewFrameInTransitioningView(for: animator),
+            let toReferenceImageViewFrame = animator.toDelegate?.referenceImageViewFrameInTransitioningView(for: animator),
             let fromReferenceImageView = animator.fromDelegate?.referenceImageView(for: animator)
-             else {
+            else {
                 return
         }
         
-        let contentFromVC: UIViewController
-        if fromVC is UINavigationController {
-            contentFromVC = fromVC.childViewControllers[0]
-        } else {
-            contentFromVC = fromVC
-        }
+        animator.fromDelegate?.transitionWillStartWith(zoomAnimator: animator)
+        animator.toDelegate?.transitionWillStartWith(zoomAnimator: animator)
         
-        self.fromViewBackgroundColor = UIColor(cgColor: contentFromVC.view.backgroundColor!.cgColor)
         self.fromReferenceImageViewFrame = fromReferenceImageViewFrame
-
+        self.toReferenceImageViewFrame = toReferenceImageViewFrame
+        
         let referenceImage = fromReferenceImageView.image!
         
-        if animator.dimmingView == nil {
-            let dimmingView = UIView(frame: toVC.view.bounds)
-            dimmingView.backgroundColor = self.fromViewBackgroundColor
-            dimmingView.alpha = 1.0
-            animator.dimmingView = dimmingView
-            containerView.insertSubview(dimmingView, belowSubview: fromVC.view)
-        }
-        
+        containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
         if animator.transitionImageView == nil {
             let transitionImageView = UIImageView(image: referenceImage)
             transitionImageView.contentMode = .scaleAspectFill
             transitionImageView.clipsToBounds = true
             transitionImageView.frame = fromReferenceImageViewFrame
             animator.transitionImageView = transitionImageView
-            containerView.insertSubview(transitionImageView, belowSubview: fromVC.view)
+            containerView.addSubview(transitionImageView)
         }
-        
-        
     }
 }

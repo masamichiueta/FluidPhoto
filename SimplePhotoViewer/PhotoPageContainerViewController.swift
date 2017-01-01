@@ -14,6 +14,8 @@ protocol PhotoPageContainerViewControllerDelegate: class {
 
 class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDelegate {
     
+    @IBOutlet weak var toolBar: UIToolbar!
+    
     enum ScreenMode {
         case full, normal
     }
@@ -52,6 +54,7 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
         
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "\(PhotoZoomViewController.self)") as! PhotoZoomViewController
         vc.delegate = self
+        vc.index = self.currentIndex
         vc.image = self.photos[self.currentIndex]
         self.singleTapGestureRecognizer.require(toFail: vc.doubleTapGestureRecognizer)
         let viewControllers = [
@@ -59,6 +62,11 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
         ]
         
         self.pageViewController.setViewControllers(viewControllers, direction: .forward, animated: true, completion: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tabBarController?.tabBar.isHidden = true
     }
     
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -94,7 +102,7 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
         case .began:
             self.currentViewController.scrollView.isScrollEnabled = false
             self.transitionController.isInteractive = true
-            self.dismiss(animated: true, completion: nil)
+            self.navigationController?.popViewController(animated: true)
         case .ended:
             if self.transitionController.isInteractive {
                 self.currentViewController.scrollView.isScrollEnabled = true
@@ -121,17 +129,20 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
     
     func changeScreenMode(to: ScreenMode) {
         if to == .full {
+            self.navigationController?.setNavigationBarHidden(true, animated: false)
+            self.toolBar.isHidden = true
             UIView.animate(withDuration: 0.25,
                            animations: {
                             self.view.backgroundColor = .black
-                            self.navigationController?.navigationBar.alpha = 0
+                            
             }, completion: { completed in
             })
         } else {
+            self.navigationController?.setNavigationBarHidden(false, animated: false)
+            self.toolBar.isHidden = false
             UIView.animate(withDuration: 0.25,
                            animations: {
                             self.view.backgroundColor = .white
-                            self.navigationController?.navigationBar.alpha = 1
             }, completion: { completed in
             })
         }
@@ -149,6 +160,7 @@ extension PhotoPageContainerViewController: UIPageViewControllerDelegate, UIPage
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "\(PhotoZoomViewController.self)") as! PhotoZoomViewController
         vc.delegate = self
         vc.image = self.photos[currentIndex - 1]
+        vc.index = currentIndex - 1
         self.singleTapGestureRecognizer.require(toFail: vc.doubleTapGestureRecognizer)
         return vc
         
@@ -164,6 +176,7 @@ extension PhotoPageContainerViewController: UIPageViewControllerDelegate, UIPage
         vc.delegate = self
         self.singleTapGestureRecognizer.require(toFail: vc.doubleTapGestureRecognizer)
         vc.image = self.photos[currentIndex + 1]
+        vc.index = currentIndex + 1
         return vc
         
     }
@@ -173,7 +186,8 @@ extension PhotoPageContainerViewController: UIPageViewControllerDelegate, UIPage
         guard let nextVC = pendingViewControllers.first as? PhotoZoomViewController else {
             return
         }
-        self.nextIndex = self.photos.index(of: nextVC.image!)
+        
+        self.nextIndex = nextVC.index
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
@@ -183,7 +197,7 @@ extension PhotoPageContainerViewController: UIPageViewControllerDelegate, UIPage
                 let zoomVC = vc as! PhotoZoomViewController
                 zoomVC.scrollView.zoomScale = zoomVC.scrollView.minimumZoomScale
             }
-            
+
             self.currentIndex = self.nextIndex!
             self.delegate?.containerViewController(self, indexDidUpdate: self.currentIndex)
         }
@@ -206,11 +220,9 @@ extension PhotoPageContainerViewController: PhotoZoomViewControllerDelegate {
 extension PhotoPageContainerViewController: PhotoZoomAnimatorDelegate {
     
     func transitionWillStartWith(zoomAnimator: PhotoZoomAnimator) {
-        
     }
     
     func transitionDidEndWith(zoomAnimator: PhotoZoomAnimator) {
-        
     }
     
     func referenceImageView(for zoomAnimator: PhotoZoomAnimator) -> UIImageView? {
