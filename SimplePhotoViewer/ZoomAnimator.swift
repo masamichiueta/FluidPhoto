@@ -66,7 +66,7 @@ class PhotoZoomAnimator: NSObject {
                        animations: {
                         self.transitionImageView?.frame = finalTransitionSize
                         toVC.view.alpha = 1.0
-                        //fromVC.tabBarController?.tabBar.alpha = 0
+                        fromVC.tabBarController?.tabBar.alpha = 0
         },
                        completion: { completed in
                     
@@ -122,7 +122,7 @@ class PhotoZoomAnimator: NSObject {
                        animations: {
                         fromVC.view.alpha = 0
                         self.transitionImageView?.frame = finalTransitionSize
-                        //toVC.tabBarController?.tabBar.alpha = 1
+                        toVC.tabBarController?.tabBar.alpha = 1
         }, completion: { completed in
             
             self.transitionImageView?.removeFromSuperview()

@@ -64,11 +64,6 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
         self.pageViewController.setViewControllers(viewControllers, direction: .forward, animated: true, completion: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.tabBarController?.tabBar.isHidden = true
-    }
-    
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         
         if let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer {
@@ -102,7 +97,7 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
         case .began:
             self.currentViewController.scrollView.isScrollEnabled = false
             self.transitionController.isInteractive = true
-            self.navigationController?.popViewController(animated: true)
+            let _ = self.navigationController?.popViewController(animated: true)
         case .ended:
             if self.transitionController.isInteractive {
                 self.currentViewController.scrollView.isScrollEnabled = true
