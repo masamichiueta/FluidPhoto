@@ -10,15 +10,15 @@ import UIKit
 
 class ZoomTransitionController: NSObject {
     
-    let animator: PhotoZoomAnimator
+    let animator: ZoomAnimator
     let interactionController: ZoomDismissalInteractionController
     var isInteractive: Bool = false
 
-    weak var fromDelegate: PhotoZoomAnimatorDelegate?
-    weak var toDelegate: PhotoZoomAnimatorDelegate?
+    weak var fromDelegate: ZoomAnimatorDelegate?
+    weak var toDelegate: ZoomAnimatorDelegate?
     
     override init() {
-        animator = PhotoZoomAnimator()
+        animator = ZoomAnimator()
         interactionController = ZoomDismissalInteractionController()
         super.init()
     }

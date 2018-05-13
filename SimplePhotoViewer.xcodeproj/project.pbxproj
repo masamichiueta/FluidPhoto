@@ -47,6 +47,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		244C0A3520A7F831002DCB64 /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				2473789D1E0D6DB5000F7F2A /* ZoomAnimator.swift */,
+				24C6D4711E14196A00F01715 /* ZoomDismissalInteractionController.swift */,
+				24C6D4741E14FC6F00F01715 /* ZoomTransitionController.swift */,
+			);
+			path = Animation;
+			sourceTree = "<group>";
+		};
+		244C0A3620A7F83D002DCB64 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				2473789B1E0D6591000F7F2A /* PhotoPageContainerViewController.swift */,
+				247378991E0D656D000F7F2A /* PhotoZoomViewController.swift */,
+				247378871E0D6302000F7F2A /* ViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		244C0A3720A7F847002DCB64 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				247378971E0D6369000F7F2A /* PhotoCollectionViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		247378791E0D6302000F7F2A = {
 			isa = PBXGroup;
 			children = (
@@ -66,18 +94,14 @@
 		247378841E0D6302000F7F2A /* SimplePhotoViewer */ = {
 			isa = PBXGroup;
 			children = (
+				244C0A3520A7F831002DCB64 /* Animation */,
 				247378851E0D6302000F7F2A /* AppDelegate.swift */,
-				247378871E0D6302000F7F2A /* ViewController.swift */,
-				247378891E0D6302000F7F2A /* Main.storyboard */,
 				2473788C1E0D6302000F7F2A /* Assets.xcassets */,
-				2473788E1E0D6302000F7F2A /* LaunchScreen.storyboard */,
 				247378911E0D6302000F7F2A /* Info.plist */,
-				247378971E0D6369000F7F2A /* PhotoCollectionViewCell.swift */,
-				247378991E0D656D000F7F2A /* PhotoZoomViewController.swift */,
-				2473789B1E0D6591000F7F2A /* PhotoPageContainerViewController.swift */,
-				2473789D1E0D6DB5000F7F2A /* ZoomAnimator.swift */,
-				24C6D4711E14196A00F01715 /* ZoomDismissalInteractionController.swift */,
-				24C6D4741E14FC6F00F01715 /* ZoomTransitionController.swift */,
+				2473788E1E0D6302000F7F2A /* LaunchScreen.storyboard */,
+				247378891E0D6302000F7F2A /* Main.storyboard */,
+				244C0A3720A7F847002DCB64 /* View */,
+				244C0A3620A7F83D002DCB64 /* ViewController */,
 			);
 			path = SimplePhotoViewer;
 			sourceTree = "<group>";

@@ -208,19 +208,19 @@ extension PhotoPageContainerViewController: PhotoZoomViewControllerDelegate {
     }
 }
 
-extension PhotoPageContainerViewController: PhotoZoomAnimatorDelegate {
+extension PhotoPageContainerViewController: ZoomAnimatorDelegate {
     
-    func transitionWillStartWith(zoomAnimator: PhotoZoomAnimator) {
+    func transitionWillStartWith(zoomAnimator: ZoomAnimator) {
     }
     
-    func transitionDidEndWith(zoomAnimator: PhotoZoomAnimator) {
+    func transitionDidEndWith(zoomAnimator: ZoomAnimator) {
     }
     
-    func referenceImageView(for zoomAnimator: PhotoZoomAnimator) -> UIImageView? {
+    func referenceImageView(for zoomAnimator: ZoomAnimator) -> UIImageView? {
         return self.currentViewController.imageView
     }
     
-    func referenceImageViewFrameInTransitioningView(for zoomAnimator: PhotoZoomAnimator) -> CGRect? {        
+    func referenceImageViewFrameInTransitioningView(for zoomAnimator: ZoomAnimator) -> CGRect? {        
         return self.currentViewController.scrollView.convert(self.currentViewController.imageView.frame, to: self.currentViewController.view)
     }
 }

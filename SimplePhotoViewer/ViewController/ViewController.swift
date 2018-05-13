@@ -114,12 +114,12 @@ extension ViewController: PhotoPageContainerViewControllerDelegate {
     }
 }
 
-extension ViewController: PhotoZoomAnimatorDelegate {
-    func transitionWillStartWith(zoomAnimator: PhotoZoomAnimator) {
+extension ViewController: ZoomAnimatorDelegate {
+    func transitionWillStartWith(zoomAnimator: ZoomAnimator) {
         
     }
     
-    func transitionDidEndWith(zoomAnimator: PhotoZoomAnimator) {
+    func transitionDidEndWith(zoomAnimator: ZoomAnimator) {
         let cell = self.collectionView.cellForItem(at: self.selectedIndexPath) as! PhotoCollectionViewCell
         
         let cellFrame = self.collectionView.convert(cell.frame, to: self.view)
@@ -131,12 +131,12 @@ extension ViewController: PhotoZoomAnimatorDelegate {
         }
     }
     
-    func referenceImageView(for zoomAnimator: PhotoZoomAnimator) -> UIImageView? {
+    func referenceImageView(for zoomAnimator: ZoomAnimator) -> UIImageView? {
         let cell = self.collectionView.cellForItem(at: self.selectedIndexPath) as! PhotoCollectionViewCell
         return cell.imageView
     }
     
-    func referenceImageViewFrameInTransitioningView(for zoomAnimator: PhotoZoomAnimator) -> CGRect? {
+    func referenceImageViewFrameInTransitioningView(for zoomAnimator: ZoomAnimator) -> CGRect? {
         
         let cell = self.collectionView.cellForItem(at: self.selectedIndexPath) as! PhotoCollectionViewCell
         

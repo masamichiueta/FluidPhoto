@@ -1,5 +1,5 @@
 //
-//  PhotoZoomAnimator.swift
+//  ZoomAnimator.swift
 //  SimplePhotoViewer
 //
 //  Created by UetaMasamichi on 2016/12/23.
@@ -8,17 +8,17 @@
 
 import UIKit
 
-protocol PhotoZoomAnimatorDelegate: class {
-    func transitionWillStartWith(zoomAnimator: PhotoZoomAnimator)
-    func transitionDidEndWith(zoomAnimator: PhotoZoomAnimator)
-    func referenceImageView(for zoomAnimator: PhotoZoomAnimator) -> UIImageView?
-    func referenceImageViewFrameInTransitioningView(for zoomAnimator: PhotoZoomAnimator) -> CGRect?
+protocol ZoomAnimatorDelegate: class {
+    func transitionWillStartWith(zoomAnimator: ZoomAnimator)
+    func transitionDidEndWith(zoomAnimator: ZoomAnimator)
+    func referenceImageView(for zoomAnimator: ZoomAnimator) -> UIImageView?
+    func referenceImageViewFrameInTransitioningView(for zoomAnimator: ZoomAnimator) -> CGRect?
 }
 
-class PhotoZoomAnimator: NSObject {
+class ZoomAnimator: NSObject {
     
-    weak var fromDelegate: PhotoZoomAnimatorDelegate?
-    weak var toDelegate: PhotoZoomAnimatorDelegate?
+    weak var fromDelegate: ZoomAnimatorDelegate?
+    weak var toDelegate: ZoomAnimatorDelegate?
     
     var transitionImageView: UIImageView?
     var presenting: Bool = true
@@ -154,7 +154,7 @@ class PhotoZoomAnimator: NSObject {
     }
 }
 
-extension PhotoZoomAnimator: UIViewControllerAnimatedTransitioning {
+extension ZoomAnimator: UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         if self.presenting {
             return 0.5
