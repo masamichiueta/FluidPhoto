@@ -13,9 +13,7 @@ protocol PhotoPageContainerViewControllerDelegate: class {
 }
 
 class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDelegate {
-    
-    @IBOutlet weak var toolBar: UIToolbar!
-    
+
     enum ScreenMode {
         case full, normal
     }
@@ -92,7 +90,7 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
         // Dispose of any resources that can be recreated.
     }
     
-    func didPanWith(gestureRecognizer: UIPanGestureRecognizer) {
+    @objc func didPanWith(gestureRecognizer: UIPanGestureRecognizer) {
         switch gestureRecognizer.state {
         case .began:
             self.currentViewController.scrollView.isScrollEnabled = false
@@ -111,7 +109,7 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
         }
     }
     
-    func didSingleTapWith(gestureRecognizer: UITapGestureRecognizer) {
+    @objc func didSingleTapWith(gestureRecognizer: UITapGestureRecognizer) {
         if self.currentMode == .full {
             changeScreenMode(to: .normal)
             self.currentMode = .normal
@@ -125,7 +123,6 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
     func changeScreenMode(to: ScreenMode) {
         if to == .full {
             self.navigationController?.setNavigationBarHidden(true, animated: false)
-            self.toolBar.isHidden = true
             UIView.animate(withDuration: 0.25,
                            animations: {
                             self.view.backgroundColor = .black
@@ -134,7 +131,6 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
             })
         } else {
             self.navigationController?.setNavigationBarHidden(false, animated: false)
-            self.toolBar.isHidden = false
             UIView.animate(withDuration: 0.25,
                            animations: {
                             self.view.backgroundColor = .white

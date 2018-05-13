@@ -54,7 +54,7 @@ class PhotoZoomViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
     
-    func didDoubleTapWith(gestureRecognizer: UITapGestureRecognizer) {
+    @objc func didDoubleTapWith(gestureRecognizer: UITapGestureRecognizer) {
         let pointInView = gestureRecognizer.location(in: self.imageView)
         var newZoomScale = self.scrollView.maximumZoomScale
         
