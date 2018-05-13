@@ -26,25 +26,24 @@ class ZoomTransitionController: NSObject {
     func didPanWith(gestureRecognizer: UIPanGestureRecognizer) {
         self.interactionController.didPanWith(gestureRecognizer: gestureRecognizer)
     }
-    
 }
 
 extension ZoomTransitionController: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        self.animator.presenting = true
+        self.animator.isPresenting = true
         self.animator.fromDelegate = fromDelegate
         self.animator.toDelegate = toDelegate
         return self.animator
     }
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        self.animator.presenting = false
+        self.animator.isPresenting = false
         let tmp = self.fromDelegate
         self.animator.fromDelegate = self.toDelegate
         self.animator.toDelegate = tmp
         return self.animator
     }
-    
+
     func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         if !self.isInteractive {
             return nil
@@ -60,11 +59,11 @@ extension ZoomTransitionController: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         
         if operation == .push {
-            self.animator.presenting = true
+            self.animator.isPresenting = true
             self.animator.fromDelegate = fromDelegate
             self.animator.toDelegate = toDelegate
         } else {
-            self.animator.presenting = false
+            self.animator.isPresenting = false
             let tmp = self.fromDelegate
             self.animator.fromDelegate = self.toDelegate
             self.animator.toDelegate = tmp

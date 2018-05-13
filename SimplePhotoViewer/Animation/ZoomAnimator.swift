@@ -19,9 +19,9 @@ class ZoomAnimator: NSObject {
     
     weak var fromDelegate: ZoomAnimatorDelegate?
     weak var toDelegate: ZoomAnimatorDelegate?
-    
+
     var transitionImageView: UIImageView?
-    var presenting: Bool = true
+    var isPresenting: Bool = true
     
     fileprivate func animateZoomInTransition(using transitionContext: UIViewControllerContextTransitioning) {
         
@@ -156,7 +156,7 @@ class ZoomAnimator: NSObject {
 
 extension ZoomAnimator: UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        if self.presenting {
+        if self.isPresenting {
             return 0.5
         } else {
             return 0.25
@@ -164,7 +164,7 @@ extension ZoomAnimator: UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        if self.presenting {
+        if self.isPresenting {
             animateZoomInTransition(using: transitionContext)
         } else {
             animateZoomOutTransition(using: transitionContext)
