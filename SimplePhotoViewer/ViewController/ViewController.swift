@@ -138,6 +138,8 @@ extension ViewController: ZoomAnimatorDelegate {
     
     func referenceImageViewFrameInTransitioningView(for zoomAnimator: ZoomAnimator) -> CGRect? {
         
+        self.collectionView.layoutIfNeeded()
+        
         let cell = self.collectionView.cellForItem(at: self.selectedIndexPath) as! PhotoCollectionViewCell
         
         let cellFrame = self.collectionView.convert(cell.frame, to: self.view)
