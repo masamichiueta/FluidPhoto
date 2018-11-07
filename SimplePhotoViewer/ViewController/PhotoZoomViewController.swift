@@ -37,6 +37,7 @@ class PhotoZoomViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.scrollView.delegate = self
+        self.scrollView.contentInsetAdjustmentBehavior = .never
         self.imageView.image = self.image
         self.imageView.frame = CGRect(x: self.imageView.frame.origin.x,
                                       y: self.imageView.frame.origin.y,
@@ -91,8 +92,7 @@ class PhotoZoomViewController: UIViewController {
         imageViewLeadingConstraint.constant = xOffset
         imageViewTrailingConstraint.constant = xOffset
         
-        let contentHeight = yOffset * 2 + self.imageView.frame.height
-        
+        let contentHeight = yOffset * 2 + self.imageView.frame.height        
         view.layoutIfNeeded()
         self.scrollView.contentSize = CGSize(width: self.scrollView.contentSize.width, height: contentHeight)
     }
