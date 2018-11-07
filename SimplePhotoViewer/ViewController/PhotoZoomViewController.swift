@@ -76,12 +76,13 @@ class PhotoZoomViewController: UIViewController {
         let heightScale = size.height / imageView.bounds.height
         let minScale = min(widthScale, heightScale)
         scrollView.minimumZoomScale = minScale
-        scrollView.zoomScale = minScale
+        if scrollView.zoomScale < minScale {
+            scrollView.zoomScale = minScale
+        }
         scrollView.maximumZoomScale = minScale * 4
     }
     
     fileprivate func updateConstraintsForSize(_ size: CGSize) {
-
         let yOffset = max(0, (size.height - imageView.frame.height) / 2)
         imageViewTopConstraint.constant = yOffset
         imageViewBottomConstraint.constant = yOffset
