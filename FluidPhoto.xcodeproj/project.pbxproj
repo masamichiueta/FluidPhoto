@@ -21,7 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		247378821E0D6302000F7F2A /* SimplePhotoViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimplePhotoViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		247378821E0D6302000F7F2A /* FluidPhoto.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FluidPhoto.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		247378851E0D6302000F7F2A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		247378871E0D6302000F7F2A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		2473788A1E0D6302000F7F2A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -78,7 +78,7 @@
 		247378791E0D6302000F7F2A = {
 			isa = PBXGroup;
 			children = (
-				247378841E0D6302000F7F2A /* SimplePhotoViewer */,
+				247378841E0D6302000F7F2A /* FluidPhoto */,
 				247378831E0D6302000F7F2A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -86,12 +86,12 @@
 		247378831E0D6302000F7F2A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				247378821E0D6302000F7F2A /* SimplePhotoViewer.app */,
+				247378821E0D6302000F7F2A /* FluidPhoto.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		247378841E0D6302000F7F2A /* SimplePhotoViewer */ = {
+		247378841E0D6302000F7F2A /* FluidPhoto */ = {
 			isa = PBXGroup;
 			children = (
 				244C0A3520A7F831002DCB64 /* Animation */,
@@ -103,15 +103,15 @@
 				244C0A3720A7F847002DCB64 /* View */,
 				244C0A3620A7F83D002DCB64 /* ViewController */,
 			);
-			path = SimplePhotoViewer;
+			path = FluidPhoto;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		247378811E0D6302000F7F2A /* SimplePhotoViewer */ = {
+		247378811E0D6302000F7F2A /* FluidPhoto */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 247378941E0D6302000F7F2A /* Build configuration list for PBXNativeTarget "SimplePhotoViewer" */;
+			buildConfigurationList = 247378941E0D6302000F7F2A /* Build configuration list for PBXNativeTarget "FluidPhoto" */;
 			buildPhases = (
 				2473787E1E0D6302000F7F2A /* Sources */,
 				2473787F1E0D6302000F7F2A /* Frameworks */,
@@ -121,9 +121,9 @@
 			);
 			dependencies = (
 			);
-			name = SimplePhotoViewer;
-			productName = SimplePhotoViewer;
-			productReference = 247378821E0D6302000F7F2A /* SimplePhotoViewer.app */;
+			name = FluidPhoto;
+			productName = FluidPhoto;
+			productReference = 247378821E0D6302000F7F2A /* FluidPhoto.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -144,7 +144,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 2473787D1E0D6302000F7F2A /* Build configuration list for PBXProject "SimplePhotoViewer" */;
+			buildConfigurationList = 2473787D1E0D6302000F7F2A /* Build configuration list for PBXProject "FluidPhoto" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -157,7 +157,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				247378811E0D6302000F7F2A /* SimplePhotoViewer */,
+				247378811E0D6302000F7F2A /* FluidPhoto */,
 			);
 		};
 /* End PBXProject section */
@@ -327,9 +327,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = A9WB53K8XM;
-				INFOPLIST_FILE = SimplePhotoViewer/Info.plist;
+				INFOPLIST_FILE = FluidPhoto/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.uetamasmaichi.SimplePhotoViewer;
+				PRODUCT_BUNDLE_IDENTIFIER = me.masamichi.FluidPhoto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
@@ -341,9 +341,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = A9WB53K8XM;
-				INFOPLIST_FILE = SimplePhotoViewer/Info.plist;
+				INFOPLIST_FILE = FluidPhoto/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.uetamasmaichi.SimplePhotoViewer;
+				PRODUCT_BUNDLE_IDENTIFIER = me.masamichi.FluidPhoto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
@@ -353,7 +353,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2473787D1E0D6302000F7F2A /* Build configuration list for PBXProject "SimplePhotoViewer" */ = {
+		2473787D1E0D6302000F7F2A /* Build configuration list for PBXProject "FluidPhoto" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				247378921E0D6302000F7F2A /* Debug */,
@@ -362,7 +362,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		247378941E0D6302000F7F2A /* Build configuration list for PBXNativeTarget "SimplePhotoViewer" */ = {
+		247378941E0D6302000F7F2A /* Build configuration list for PBXNativeTarget "FluidPhoto" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				247378951E0D6302000F7F2A /* Debug */,

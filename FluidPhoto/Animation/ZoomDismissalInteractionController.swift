@@ -1,6 +1,6 @@
 //
 //  ZoomDismissalInteractionController.swift
-//  SimplePhotoViewer
+//  FluidPhoto
 //
 //  Created by UetaMasamichi on 2016/12/29.
 //  Copyright © 2016 Masmichi Ueta. All rights reserved.
