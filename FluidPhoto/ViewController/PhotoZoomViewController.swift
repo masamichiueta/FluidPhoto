@@ -25,6 +25,8 @@ class PhotoZoomViewController: UIViewController {
     
     var image: UIImage!
     var index: Int = 0
+    var isRotating: Bool = false
+    var firstTimeLoaded: Bool = true
     
     var doubleTapGestureRecognizer: UITapGestureRecognizer!
     
@@ -51,6 +53,11 @@ class PhotoZoomViewController: UIViewController {
         updateZoomScaleForSize(view.bounds.size)
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.isRotating = true
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -69,17 +76,24 @@ class PhotoZoomViewController: UIViewController {
         let originY = pointInView.y - (height / 2.0)
         
         let rectToZoomTo = CGRect(x: originX, y: originY, width: width, height: height)
-        self.scrollView.zoom(to: rectToZoomTo, animated: true)        
+        self.scrollView.zoom(to: rectToZoomTo, animated: true)
     }
     
     fileprivate func updateZoomScaleForSize(_ size: CGSize) {
+        
         let widthScale = size.width / imageView.bounds.width
         let heightScale = size.height / imageView.bounds.height
         let minScale = min(widthScale, heightScale)
         scrollView.minimumZoomScale = minScale
-        if scrollView.zoomScale < minScale {
+        
+        //scrollView.zoomScale is only updated once when
+        //the view first loads and each time the device is rotated
+        if self.isRotating || self.firstTimeLoaded {
             scrollView.zoomScale = minScale
+            self.isRotating = false
+            self.firstTimeLoaded = false
         }
+        
         scrollView.maximumZoomScale = minScale * 4
     }
     
@@ -92,11 +106,10 @@ class PhotoZoomViewController: UIViewController {
         imageViewLeadingConstraint.constant = xOffset
         imageViewTrailingConstraint.constant = xOffset
         
-        let contentHeight = yOffset * 2 + self.imageView.frame.height        
+        let contentHeight = yOffset * 2 + self.imageView.frame.height
         view.layoutIfNeeded()
         self.scrollView.contentSize = CGSize(width: self.scrollView.contentSize.width, height: contentHeight)
     }
-
 }
 
 extension PhotoZoomViewController: UIScrollViewDelegate {
