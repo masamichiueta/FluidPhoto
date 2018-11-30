@@ -66,7 +66,16 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
         
         if let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer {
             let velocity = gestureRecognizer.velocity(in: self.view)
-            if velocity.y < 0 {
+            
+            var velocityCheck : Bool = false
+            
+            if UIDevice.current.orientation.isLandscape {
+                velocityCheck = velocity.x < 0
+            }
+            else {
+                velocityCheck = velocity.y < 0
+            }
+            if velocityCheck {
                 return false
             }
         }
