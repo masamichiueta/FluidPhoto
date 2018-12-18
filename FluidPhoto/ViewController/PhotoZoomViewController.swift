@@ -39,18 +39,48 @@ class PhotoZoomViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.scrollView.delegate = self
-        self.scrollView.contentInsetAdjustmentBehavior = .never
+        if #available(iOS 11, *) {
+            self.scrollView.contentInsetAdjustmentBehavior = .never
+        }
         self.imageView.image = self.image
         self.imageView.frame = CGRect(x: self.imageView.frame.origin.x,
                                       y: self.imageView.frame.origin.y,
                                       width: self.image.size.width,
                                       height: self.image.size.height)
         self.view.addGestureRecognizer(self.doubleTapGestureRecognizer)
+        
+        //Update the constraints to prevent the constraints from
+        //being calculated incorrectly on certain iOS devices
+        self.updateConstraintsForSize(self.view.frame.size)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateZoomScaleForSize(view.bounds.size)
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        
+        //When this view's safeAreaInsets change, propagate this information
+        //to the previous ViewController so the collectionView contentInsets
+        //can be updated accordingly. This is necessary in order to properly
+        //calculate the frame position for the dismiss (swipe down) animation
+
+        if #available(iOS 11, *) {
+            
+            //Get the parent view controller (ViewController) from the navigation controller
+            guard let parentVC = self.navigationController?.viewControllers.first as? ViewController else {
+                return
+            }
+            
+            //Update the ViewController's left and right local safeAreaInset variables
+            //with the safeAreaInsets for this current view. These will be used to
+            //update the contentInsets of the collectionView inside ViewController
+            parentVC.currentLeftSafeAreaInset = self.view.safeAreaInsets.left
+            parentVC.currentRightSafeAreaInset = self.view.safeAreaInsets.right
+            
+        }
+        
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
