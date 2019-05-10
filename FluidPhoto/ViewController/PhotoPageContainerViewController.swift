@@ -22,7 +22,7 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
     weak var delegate: PhotoPageContainerViewControllerDelegate?
     
     var pageViewController: UIPageViewController {
-        return self.childViewControllers[0] as! UIPageViewController
+        return self.children[0] as! UIPageViewController
     }
     
     var currentViewController: PhotoZoomViewController {

@@ -145,7 +145,7 @@
 			};
 			buildConfigurationList = 2473787D1E0D6302000F7F2A /* Build configuration list for PBXProject "FluidPhoto" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -332,7 +332,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = me.masamichi.FluidPhoto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -347,7 +347,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = me.masamichi.FluidPhoto;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
