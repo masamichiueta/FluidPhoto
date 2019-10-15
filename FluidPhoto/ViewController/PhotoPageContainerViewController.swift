@@ -2,7 +2,7 @@
 //  PhotoPageContainerViewController.swift
 //  FluidPhoto
 //
-//  Created by UetaMasamichi on 2016/12/23.
+//  Created by Masamichi Ueta on 2016/12/23.
 //  Copyright © 2016 Masmichi Ueta. All rights reserved.
 //
 
@@ -142,7 +142,11 @@ class PhotoPageContainerViewController: UIViewController, UIGestureRecognizerDel
             self.navigationController?.setNavigationBarHidden(false, animated: false)
             UIView.animate(withDuration: 0.25,
                            animations: {
-                            self.view.backgroundColor = .white
+                            if #available(iOS 13.0, *) {
+                                self.view.backgroundColor = .systemBackground
+                            } else {
+                                self.view.backgroundColor = .white
+                            }
             }, completion: { completed in
             })
         }

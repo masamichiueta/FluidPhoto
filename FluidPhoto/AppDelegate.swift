@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  FluidPhoto
 //
-//  Created by UetaMasamichi on 2016/12/23.
+//  Created by Masamichi Ueta on 2016/12/23.
 //  Copyright © 2016 Masmichi Ueta. All rights reserved.
 //
 

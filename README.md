@@ -2,7 +2,7 @@
 FluidPhoto is a sample photo browsing application with zoom transition and interactive transition.
 The best sample to create transitions and interactions like Photos app.
 
-![Screen Shot](https://github.com/masamichiueta/FluidPhoto/blob/master/fluidphoto.gif)
+![Screen Shot](https://github.com/masamichiueta/FluidPhoto/blob/master/Screenshots/fluidphoto.gif)
 
 ## Articles
 - [Create transition and interaction like iOS Photos app](https://medium.com/@masamichiueta/create-transition-and-interaction-like-ios-photos-app-2b9f16313d3)
