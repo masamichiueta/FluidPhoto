@@ -25,9 +25,7 @@ class PhotoZoomViewController: UIViewController {
     
     var image: UIImage!
     var index: Int = 0
-    var isRotating: Bool = false
-    var firstTimeLoaded: Bool = true
-    
+
     var doubleTapGestureRecognizer: UITapGestureRecognizer!
     
     required init?(coder aDecoder: NSCoder) {
@@ -47,16 +45,19 @@ class PhotoZoomViewController: UIViewController {
                                       y: self.imageView.frame.origin.y,
                                       width: self.image.size.width,
                                       height: self.image.size.height)
-        self.view.addGestureRecognizer(self.doubleTapGestureRecognizer)
-        
-        //Update the constraints to prevent the constraints from
-        //being calculated incorrectly on certain iOS devices
-        self.updateConstraintsForSize(self.view.frame.size)
+        self.view.addGestureRecognizer(self.doubleTapGestureRecognizer)        
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateZoomScaleForSize(view.bounds.size)
+        updateConstraintsForSize(view.bounds.size)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        updateZoomScaleForSize(view.bounds.size)
+        updateConstraintsForSize(view.bounds.size)
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -81,11 +82,6 @@ class PhotoZoomViewController: UIViewController {
             
         }
         
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        self.isRotating = true
     }
     
     override func didReceiveMemoryWarning() {
@@ -116,14 +112,7 @@ class PhotoZoomViewController: UIViewController {
         let minScale = min(widthScale, heightScale)
         scrollView.minimumZoomScale = minScale
         
-        //scrollView.zoomScale is only updated once when
-        //the view first loads and each time the device is rotated
-        if self.isRotating || self.firstTimeLoaded {
-            scrollView.zoomScale = minScale
-            self.isRotating = false
-            self.firstTimeLoaded = false
-        }
-        
+        scrollView.zoomScale = minScale
         scrollView.maximumZoomScale = minScale * 4
     }
     
@@ -135,7 +124,7 @@ class PhotoZoomViewController: UIViewController {
         let xOffset = max(0, (size.width - imageView.frame.width) / 2)
         imageViewLeadingConstraint.constant = xOffset
         imageViewTrailingConstraint.constant = xOffset
-        
+
         let contentHeight = yOffset * 2 + self.imageView.frame.height
         view.layoutIfNeeded()
         self.scrollView.contentSize = CGSize(width: self.scrollView.contentSize.width, height: contentHeight)

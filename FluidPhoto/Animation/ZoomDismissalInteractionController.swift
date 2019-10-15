@@ -35,18 +35,8 @@ class ZoomDismissalInteractionController: NSObject {
         
         let anchorPoint = CGPoint(x: fromReferenceImageViewFrame.midX, y: fromReferenceImageViewFrame.midY)
         let translatedPoint = gestureRecognizer.translation(in: fromReferenceImageView)
-        
-        var verticalDelta : CGFloat = 0
-        
-        //Check if the device is in landscape
-        if UIDevice.current.orientation.isLandscape {
-            verticalDelta = translatedPoint.x < 0 ? 0 : translatedPoint.x
-        }
-        //Otherwise the device is in any non-landscape orientation
-        else {
-            verticalDelta = translatedPoint.y < 0 ? 0 : translatedPoint.y
-        }
-        
+        let verticalDelta : CGFloat = translatedPoint.y < 0 ? 0 : translatedPoint.y
+
         let backgroundAlpha = backgroundAlphaFor(view: fromVC.view, withPanningVerticalDelta: verticalDelta)
         let scale = scaleFor(view: fromVC.view, withPanningVerticalDelta: verticalDelta)
         
@@ -65,17 +55,7 @@ class ZoomDismissalInteractionController: NSObject {
         if gestureRecognizer.state == .ended {
             
             let velocity = gestureRecognizer.velocity(in: fromVC.view)
-            
-            var velocityCheck : Bool = false
-            
-            if UIDevice.current.orientation.isLandscape {
-                velocityCheck = velocity.x < 0 || newCenter.x < anchorPoint.x
-            }
-            else {
-                velocityCheck = velocity.y < 0 || newCenter.y < anchorPoint.y
-            }
-            
-            if velocityCheck {
+            if velocity.y < 0 || newCenter.y < anchorPoint.y {
                 
                 //cancel
                 UIView.animate(
