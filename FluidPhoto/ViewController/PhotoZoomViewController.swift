@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol PhotoZoomViewControllerDelegate: class {
+protocol PhotoZoomViewControllerDelegate: AnyObject {
     func photoZoomViewController(_ photoZoomViewController: PhotoZoomViewController, scrollViewDidScroll scrollView: UIScrollView)
 }
 

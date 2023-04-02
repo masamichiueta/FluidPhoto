@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol PhotoPageContainerViewControllerDelegate: class {
+protocol PhotoPageContainerViewControllerDelegate: AnyObject {
     func containerViewController(_ containerViewController: PhotoPageContainerViewController, indexDidUpdate currentIndex: Int)
 }
 
